@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -9,15 +9,13 @@
         :root { --primary: #00ff88; --bg: #05070a; --card: #12161d; --text: #e0e0e0; --accent: #ff0055; --border: #232931; }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', 'Segoe UI', sans-serif; margin: 0; padding: 0; padding-bottom: 50px; }
         .container { max-width: 800px; margin: auto; padding: 15px; }
 
-        /* Header Estilo App */
         header { text-align: center; padding: 30px 0; background: linear-gradient(to bottom, #12161d, var(--bg)); border-bottom: 1px solid var(--border); }
-        h1 { margin: 0; font-size: 1.5rem; letter-spacing: 2px; color: #fff; text-transform: uppercase; }
-        .live-tag { background: var(--accent); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 4px; vertical-align: middle; }
+        h1 { margin: 0; font-size: 1.4rem; letter-spacing: 2px; color: #fff; text-transform: uppercase; }
+        .live-tag { background: var(--accent); color: #fff; font-size: 9px; padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 5px; }
 
-        /* Tabela de Classificação Profissional */
         .leaderboard-card { background: var(--card); border-radius: 16px; padding: 15px; margin-bottom: 25px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .table-wrapper { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -27,35 +25,37 @@
         .player-name { font-weight: 600; color: #fff; }
         .pts-bold { color: var(--primary); font-weight: 800; }
 
-        /* Barra de Busca e Filtros */
-        .search-box { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; color: #fff; margin-bottom: 15px; outline: none; }
+        .search-box { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; color: #fff; margin-bottom: 15px; outline: none; transition: 0.3s; }
+        .search-box:focus { border-color: var(--primary); }
+        
         .filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; }
         .filters::-webkit-scrollbar { display: none; }
         .filter-btn { background: var(--card); color: #888; border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; white-space: nowrap; font-size: 13px; font-weight: 600; }
         .filter-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
 
-        /* Card de Partida Estilo FIFA/eFootball */
         .matches-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .match-card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid var(--border); transition: 0.2s; }
+        .match-card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid var(--border); position: relative; }
         .match-card.finished { border-left: 4px solid var(--primary); opacity: 0.9; }
-        .match-card.finished .score-display { background: #1a2421; color: var(--primary); }
         
-        .match-header { display: flex; justify-content: space-between; font-size: 10px; color: #666; margin-bottom: 10px; text-transform: uppercase; font-weight: 700; }
+        .match-header { display: flex; justify-content: space-between; font-size: 10px; color: #555; margin-bottom: 10px; text-transform: uppercase; font-weight: 700; }
         .teams-container { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
         .team { flex: 1; font-size: 14px; font-weight: 600; color: #fff; }
         .team.right { text-align: right; }
-        .score-display { background: #000; padding: 8px 15px; border-radius: 8px; font-size: 18px; font-weight: 800; min-width: 65px; text-align: center; border: 1px solid var(--border); }
+        .score-display { background: #000; padding: 8px 15px; border-radius: 8px; font-size: 18px; font-weight: 800; min-width: 65px; text-align: center; border: 1px solid var(--border); color: #fff; }
         
-        /* Admin Controls */
-        #admin-panel { background: #1a1f26; padding: 20px; border-radius: 15px; border: 1px dashed var(--primary); margin: 20px 0; display: none; animation: slideIn 0.3s; }
-        .admin-input-group { display: flex; gap: 8px; margin-top: 10px; }
+        #admin-panel { background: #0a0d12; padding: 20px; border-radius: 15px; border: 1px solid var(--primary); margin: 20px 0; display: none; }
         .score-edit { width: 45px; height: 45px; background: #000; border: 1px solid var(--primary); color: #fff; text-align: center; border-radius: 8px; font-size: 20px; }
         
-        button { cursor: pointer; border: none; font-weight: 700; transition: 0.2s; }
+        button { cursor: pointer; border: none; font-weight: 700; }
         .btn-action { background: var(--primary); color: #000; border-radius: 8px; padding: 12px; width: 100%; }
-        .btn-admin-access { background: transparent; color: #444; font-size: 12px; margin: 40px auto; display: block; }
+        
+        /* Botão Admin Ultra Discreto */
+        .btn-config { position: fixed; bottom: 15px; right: 15px; background: none; color: #1a1f26; font-size: 14px; opacity: 0.3; }
 
-        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Modal PIN Discreto */
+        #admin-auth { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 9999; }
+        .modal-content { background: #0a0d12; padding: 30px; border-radius: 15px; text-align: center; border: 1px solid #1a1f26; }
+        .pin-input { background: transparent; border: none; border-bottom: 2px solid var(--primary); color: #fff; font-size: 30px; width: 120px; text-align: center; letter-spacing: 8px; outline: none; }
     </style>
 </head>
 <body>
@@ -84,7 +84,7 @@
         </div>
     </div>
 
-    <input type="text" id="search-input" class="search-box" placeholder="Pesquisar jogador..." onkeyup="renderMatches()">
+    <input type="text" id="search-input" class="search-box" placeholder="Procurar jogo de um jogador..." onkeyup="renderMatches()">
     
     <div class="filters">
         <button class="filter-btn active" onclick="setFilter('todos', this)">Todos</button>
@@ -94,7 +94,10 @@
     </div>
 
     <div id="admin-panel">
-        <h3 style="margin-top:0; color: var(--primary); font-size: 14px;">GERENCIAMENTO</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 style="margin:0; color: var(--primary); font-size: 12px; text-transform:uppercase;">Painel Admin</h3>
+            <button onclick="logout()" style="background:none; color:var(--accent); font-size:10px;">SAIR</button>
+        </div>
         <input type="text" id="new-player-name" placeholder="Nome do Jogador" style="width:100%; padding:12px; border-radius:8px; background:#000; border:1px solid #333; color:#fff; margin-bottom:10px;">
         <div style="display:flex; gap:10px;">
             <button onclick="addPlayer()" class="btn-action" style="flex:2">Adicionar</button>
@@ -104,17 +107,17 @@
     </div>
 
     <div class="matches-grid" id="matches-list"></div>
-
-    <button class="btn-admin-access" onclick="showAuth()">ACESSO RESTRITO</button>
 </div>
+
+<button class="btn-config" onclick="showAuth()"><i class="fas fa-cog"></i></button>
 
 <div id="admin-auth">
     <div class="modal-content">
-        <h3 style="margin-top:0">PIN de Acesso</h3>
-        <input type="password" id="admin-pass" style="font-size: 24px; text-align: center; width: 150px; letter-spacing: 5px;">
+        <p style="font-size:12px; color:#555; margin-bottom:20px;">AUTENTICAÇÃO REQUERIDA</p>
+        <input type="password" id="admin-pass" class="pin-input" maxlength="4">
         <br><br>
-        <button onclick="checkAuth()" class="btn-action">ENTRAR</button>
-        <button onclick="closeAuth()" style="background:none; color:#888; margin-top:10px;">FECHAR</button>
+        <button onclick="checkAuth()" class="btn-action" style="margin-top:20px;">ACESSAR</button>
+        <button onclick="closeAuth()" style="background:none; color:#444; margin-top:15px; font-size:11px;">CANCELAR</button>
     </div>
 </div>
 
@@ -137,7 +140,16 @@
     let currentFilter = 'todos';
 
     window.showAuth = () => document.getElementById('admin-auth').style.display = 'flex';
-    window.closeAuth = () => document.getElementById('admin-auth').style.display = 'none';
+    window.closeAuth = () => {
+        document.getElementById('admin-auth').style.display = 'none';
+        document.getElementById('admin-pass').value = '';
+    };
+    window.logout = () => {
+        isAdmin = false;
+        document.getElementById('admin-panel').style.display = 'none';
+        renderMatches();
+    };
+
     window.checkAuth = () => {
         if(document.getElementById('admin-pass').value === "9498") {
             isAdmin = true;
@@ -191,8 +203,8 @@
             list.innerHTML = filtrados.map(m => `
                 <div class="match-card ${m.status === 'done' ? 'finished' : ''}">
                     <div class="match-header">
-                        <span>${m.turno === 1 ? '1º Turno - Ida' : '2º Turno - Volta'}</span>
-                        <span>${m.status === 'done' ? 'Encerrado' : 'Aguardando'}</span>
+                        <span>${m.turno === 1 ? 'IDA' : 'VOLTA'}</span>
+                        <span>${m.status === 'done' ? 'FIM' : 'PENDENTE'}</span>
                     </div>
                     <div class="teams-container">
                         <div class="team">${m.p1}</div>
@@ -200,10 +212,10 @@
                         <div class="team right">${m.p2}</div>
                     </div>
                     ${isAdmin ? `
-                        <div class="admin-input-group" style="justify-content:center; padding-top:15px; border-top:1px solid #232931; margin-top:10px;">
+                        <div class="admin-input-group" style="display:flex; gap:10px; justify-content:center; padding-top:15px; border-top:1px solid #232931; margin-top:10px;">
                             <input type="number" id="i1-${m.id}" class="score-edit" value="${m.g1}">
                             <input type="number" id="i2-${m.id}" class="score-edit" value="${m.g2}">
-                            <button onclick="salvarPlacar('${m.id}')" class="btn-action" style="width:auto; padding:0 20px;">OK</button>
+                            <button onclick="salvarPlacar('${m.id}')" class="btn-action" style="width:auto; padding:0 20px;">SALVAR</button>
                         </div>
                     ` : ''}
                 </div>`).join('');
@@ -227,7 +239,6 @@
                 await addDoc(collection(db, "partidas"), { p1: nomes[j], p2: nomes[i], g1:0, g2:0, status:'open', turno: 2 });
             }
         }
-        alert("Campeonato Gerado!");
     };
 
     window.salvarPlacar = async (id) => {
@@ -271,4 +282,3 @@
 </script>
 </body>
 </html>
-
