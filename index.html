@@ -7,40 +7,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #00ff88; --bg: #0b0e14; --card: #1a1f26; --text: #ffffff; --accent: #ff0055; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; line-height: 1.6; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; }
         .container { max-width: 1000px; margin: auto; }
-        
         header { text-align: center; padding: 20px; border-bottom: 1px solid #2d343e; margin-bottom: 20px; }
         .live-indicator { background: red; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        /* Estilo da Tabela */
+        /* Tabela */
         .leaderboard-container { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 30px; border: 1px solid #2d343e; }
         table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; color: var(--primary); padding: 12px; border-bottom: 2px solid #2d343e; text-transform: uppercase; font-size: 12px; }
+        th { text-align: left; color: var(--primary); padding: 12px; border-bottom: 2px solid #2d343e; font-size: 12px; }
         td { padding: 12px; border-bottom: 1px solid #2d343e; }
         .pos { font-weight: bold; color: var(--primary); width: 30px; }
 
-        /* Cards de Jogos */
+        /* Grid de Jogos */
         .matches-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
         .match-card { background: var(--card); border-radius: 10px; padding: 15px; border: 1px solid #2d343e; transition: 0.3s; }
         .match-card.finished { border-left: 5px solid var(--primary); background: #1a2421; }
         .teams-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: bold; }
         .score-display { font-size: 20px; background: #000; padding: 5px 12px; border-radius: 5px; color: var(--primary); min-width: 60px; text-align: center; }
         
-        /* Área Admin */
-        .admin-section { background: #1a1f26; padding: 20px; border-radius: 10px; border: 1px dashed var(--primary); margin: 20px 0; display: none; }
-        .admin-only { display: none; } /* Controlado pelo JS */
+        /* Admin Section */
+        #admin-panel { background: #1a1f26; padding: 20px; border-radius: 10px; border: 1px dashed var(--primary); margin: 20px 0; display: none; }
+        .score-input { width: 40px; background: #000; border: 1px solid var(--primary); color: #fff; text-align: center; border-radius: 4px; padding: 5px; }
         
-        input { padding: 10px; border-radius: 5px; border: 1px solid #333; background: #000; color: #fff; margin-bottom: 10px; }
-        button { cursor: pointer; border: none; border-radius: 5px; padding: 10px 15px; font-weight: bold; transition: 0.2s; }
+        input[type="text"], input[type="password"] { padding: 10px; border-radius: 5px; border: 1px solid #333; background: #000; color: #fff; }
+        button { cursor: pointer; border: none; border-radius: 5px; padding: 10px 15px; font-weight: bold; }
         .btn-main { background: var(--primary); color: #000; }
-        .btn-main:hover { background: #00cc6e; }
         .btn-danger { background: var(--accent); color: #fff; }
 
-        /* Login Modal */
         #admin-auth { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 9999; }
-        .modal-content { background: var(--card); padding: 40px; border-radius: 15px; text-align: center; border: 1px solid var(--primary); }
+        .modal-content { background: var(--card); padding: 40px; border-radius: 15px; text-align: center; }
     </style>
 </head>
 <body>
@@ -65,45 +62,42 @@
                     <th>SG</th>
                 </tr>
             </thead>
-            <tbody>
-                </tbody>
+            <tbody></tbody>
         </table>
     </div>
 
-    <div id="admin-panel" class="admin-section">
-        <h3><i class="fas fa-user-shield"></i> Painel do Administrador</h3>
+    <div id="admin-panel">
+        <h3>Painel do Administrador</h3>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <input type="text" id="new-player-name" placeholder="Nome do Jogador">
-            <button onclick="addPlayer()" class="btn-main">Salvar Jogador no Banco</button>
-            <button onclick="sortearTorneio()" class="btn-main" style="background: #ffaa00;">Sortear Todos os Jogos</button>
+            <button onclick="addPlayer()" class="btn-main">Salvar Jogador</button>
+            <button onclick="sortearTorneio()" class="btn-main" style="background: #ffaa00;">Gerar Ida e Volta</button>
             <button onclick="resetarTudo()" class="btn-danger">Limpar Tudo</button>
         </div>
-        <p style="font-size: 11px; color: #888;">* Adicione os 12 jogadores antes de sortear.</p>
     </div>
 
     <h3><i class="fas fa-gamepad"></i> Confrontos</h3>
     <div class="matches-grid" id="matches-list"></div>
 
     <center>
-        <button onclick="showAuth()" style="background:none; color: #444; margin-top: 50px;">Acesso Restrito</button>
+        <button onclick="showAuth()" style="background:none; color: #444; margin: 40px 0;">Acesso Admin</button>
     </center>
 </div>
 
 <div id="admin-auth">
     <div class="modal-content">
         <h2>Senha de Admin</h2>
-        <input type="password" id="admin-pass" placeholder="****">
+        <input type="password" id="admin-pass">
         <br><br>
         <button onclick="checkAuth()" class="btn-main">Entrar</button>
-        <button onclick="closeAuth()" style="background:none; color: white;">Cancelar</button>
+        <button onclick="closeAuth()" style="background:none; color: white;">Sair</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, getDocs, writeBatch, deleteDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, getDocs, writeBatch, deleteDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
-    // Suas credenciais
     const firebaseConfig = {
         apiKey: "AIzaSyDVSyYqthdpYZmtHtfljrlGs6p9r6MtL4U",
         authDomain: "efootball-league-f71ac.firebaseapp.com",
@@ -115,145 +109,130 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
-    // Variável para controlar se o admin está logado
     let isAdmin = false;
 
-    // --- FUNÇÕES DE ADMIN ---
+    // --- AUTH ---
     window.showAuth = () => document.getElementById('admin-auth').style.display = 'flex';
     window.closeAuth = () => document.getElementById('admin-auth').style.display = 'none';
-    
     window.checkAuth = () => {
         if(document.getElementById('admin-pass').value === "9498") {
             isAdmin = true;
             document.getElementById('admin-panel').style.display = 'block';
-            document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
             closeAuth();
-            renderMatches(); // Re-renderiza para mostrar os inputs
-        } else {
-            alert("Acesso negado.");
-        }
+        } else { alert("Senha incorreta"); }
     };
 
-    // --- LOGICA DOS JOGADORES (PERSISTENTE) ---
+    // --- ESCUTAR JOGADORES (Sincronizado com F5) ---
+    onSnapshot(collection(db, "jogadores"), (snap) => {
+        const tbody = document.querySelector("#leaderboard tbody");
+        let jogadores = [];
+        snap.forEach(d => jogadores.push({ id: d.id, ...d.data() }));
+        
+        // Ordenação manual para evitar erro de índice no Firebase
+        jogadores.sort((a, b) => b.pts - a.pts || b.sg - a.sg);
+
+        tbody.innerHTML = jogadores.map((p, i) => `
+            <tr>
+                <td class="pos">${i+1}º</td>
+                <td>${p.nome}</td>
+                <td><strong>${p.pts}</strong></td>
+                <td>${p.v}</td>
+                <td>${p.e}</td>
+                <td>${p.d}</td>
+                <td>${p.sg}</td>
+            </tr>
+        `).join('');
+    });
+
+    // --- ESCUTAR PARTIDAS ---
+    onSnapshot(collection(db, "partidas"), (snap) => {
+        const list = document.getElementById("matches-list");
+        let HTMLpartidas = "";
+        snap.forEach(docSnap => {
+            const m = docSnap.data();
+            const id = docSnap.id;
+            HTMLpartidas += `
+                <div class="match-card ${m.status === 'done' ? 'finished' : ''}">
+                    <div class="teams-row">
+                        <span>${m.p1}</span>
+                        <div class="score-display">${m.g1} x ${m.g2}</div>
+                        <span>${m.p2}</span>
+                    </div>
+                    ${isAdmin ? `
+                        <div style="margin-top:10px; text-align:center;">
+                            <input type="number" id="i1-${id}" class="score-input" value="${m.g1}">
+                            <input type="number" id="i2-${id}" class="score-input" value="${m.g2}">
+                            <button onclick="salvarPlacar('${id}')" class="btn-main" style="padding: 2px 8px;">OK</button>
+                        </div>
+                    ` : ''}
+                </div>`;
+        });
+        list.innerHTML = HTMLpartidas;
+    });
+
+    // --- AÇÕES ---
     window.addPlayer = async () => {
         const nome = document.getElementById("new-player-name").value;
         if(!nome) return;
-        // Salva no Firestore - Isso faz com que ao atualizar o site, o nome continue lá
-        await addDoc(collection(db, "jogadores"), {
-            nome: nome,
-            pts: 0, v: 0, e: 0, d: 0, sg: 0
-        });
+        await addDoc(collection(db, "jogadores"), { nome, pts:0, v:0, e:0, d:0, sg:0 });
         document.getElementById("new-player-name").value = "";
     };
 
-    // --- LISTAGEM EM TEMPO REAL ---
-    onSnapshot(query(collection(db, "jogadores"), orderBy("pts", "desc"), orderBy("sg", "desc")), (snap) => {
-        const tbody = document.querySelector("#leaderboard tbody");
-        tbody.innerHTML = "";
-        snap.forEach((doc, i) => {
-            const p = doc.data();
-            tbody.innerHTML += `
-                <tr>
-                    <td class="pos">${i+1}º</td>
-                    <td>${p.nome}</td>
-                    <td><strong>${p.pts}</strong></td>
-                    <td>${p.v}</td>
-                    <td>${p.e}</td>
-                    <td>${p.d}</td>
-                    <td>${p.sg}</td>
-                </tr>
-            `;
-        });
-    });
-
-    // Função separada para renderizar partidas
-    function renderMatches() {
-        onSnapshot(collection(db, "partidas"), (snap) => {
-            const list = document.getElementById("matches-list");
-            list.innerHTML = "";
-            snap.forEach(docSnap => {
-                const m = docSnap.data();
-                const id = docSnap.id;
-                list.innerHTML += `
-                    <div class="match-card ${m.status === 'done' ? 'finished' : ''}">
-                        <div class="teams-row">
-                            <span>${m.p1}</span>
-                            <div class="score-display">${m.g1} x ${m.g2}</div>
-                            <span>${m.p2}</span>
-                        </div>
-                        ${isAdmin ? `
-                            <div style="margin-top:10px; text-align:center;">
-                                <input type="number" id="i1-${id}" class="score-input" value="${m.g1}" style="width:35px">
-                                <input type="number" id="i2-${id}" class="score-input" value="${m.g2}" style="width:35px">
-                                <button onclick="salvarPlacar('${id}')" class="btn-main" style="padding: 2px 10px;">OK</button>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            });
-        });
-    }
-
-    renderMatches();
-
     window.salvarPlacar = async (id) => {
-        const g1 = parseInt(document.getElementById(`i1-${id}`).value);
-        const g2 = parseInt(document.getElementById(`i2-${id}`).value);
+        const g1 = parseInt(document.getElementById(`i1-${id}`).value) || 0;
+        const g2 = parseInt(document.getElementById(`i2-${id}`).value) || 0;
         await updateDoc(doc(db, "partidas", id), { g1, g2, status: 'done' });
         recalcularTabela();
     };
 
     window.sortearTorneio = async () => {
-        const playersSnap = await getDocs(collection(db, "jogadores"));
-        const names = playersSnap.docs.map(d => d.data().nome);
-        if(names.length < 2) return alert("Adicione pelo menos 2 jogadores!");
+        const pSnap = await getDocs(collection(db, "jogadores"));
+        const nomes = pSnap.docs.map(d => d.data().nome);
+        if(nomes.length < 2) return alert("Adicione jogadores primeiro!");
         
-        for (let i = 0; i < names.length; i++) {
-            for (let j = i + 1; j < names.length; j++) {
-                await addDoc(collection(db, "partidas"), { p1: names[i], p2: names[j], g1: 0, g2: 0, status: 'open' });
-                await addDoc(collection(db, "partidas"), { p1: names[j], p2: names[i], g1: 0, g2: 0, status: 'open' });
+        for (let i = 0; i < nomes.length; i++) {
+            for (let j = i + 1; j < nomes.length; j++) {
+                await addDoc(collection(db, "partidas"), { p1: nomes[i], p2: nomes[j], g1:0, g2:0, status:'open' });
+                await addDoc(collection(db, "partidas"), { p1: nomes[j], p2: nomes[i], g1:0, g2:0, status:'open' });
             }
         }
     };
 
-    window.resetarTudo = async () => {
-        if(!confirm("Apagar todos os dados?")) return;
+    window.recalcularTabela = async () => {
         const pSnap = await getDocs(collection(db, "jogadores"));
         const mSnap = await getDocs(collection(db, "partidas"));
-        pSnap.forEach(d => deleteDoc(d.ref));
-        mSnap.forEach(d => deleteDoc(d.ref));
-    };
-
-    window.recalcularTabela = async () => {
-        const playersSnap = await getDocs(collection(db, "jogadores"));
-        const matchesSnap = await getDocs(collection(db, "partidas"));
         const batch = writeBatch(db);
 
-        playersSnap.forEach(pDoc => {
+        pSnap.forEach(pDoc => {
             const pNome = pDoc.data().nome;
-            let stats = { pts: 0, v: 0, e: 0, d: 0, sg: 0 };
-
-            matchesSnap.forEach(mDoc => {
+            let st = { pts: 0, v: 0, e: 0, d: 0, sg: 0 };
+            mSnap.forEach(mDoc => {
                 const m = mDoc.data();
                 if(m.status !== 'done') return;
                 if(m.p1 === pNome) {
-                    stats.sg += (m.g1 - m.g2);
-                    if(m.g1 > m.g2) { stats.pts += 3; stats.v += 1; }
-                    else if(m.g1 === m.g2) { stats.pts += 1; stats.e += 1; }
-                    else { stats.d += 1; }
+                    st.sg += (m.g1 - m.g2);
+                    if(m.g1 > m.g2) { st.pts += 3; st.v += 1; }
+                    else if(m.g1 === m.g2) { st.pts += 1; st.e += 1; }
+                    else st.d += 1;
                 } else if(m.p2 === pNome) {
-                    stats.sg += (m.g2 - m.g1);
-                    if(m.g2 > m.g1) { stats.pts += 3; stats.v += 1; }
-                    else if(m.g1 === m.g2) { stats.pts += 1; stats.e += 1; }
-                    else { stats.d += 1; }
+                    st.sg += (m.g2 - m.g1);
+                    if(m.g2 > m.g1) { st.pts += 3; st.v += 1; }
+                    else if(m.g1 === m.g2) { st.pts += 1; st.e += 1; }
+                    else st.d += 1;
                 }
             });
-            batch.update(pDoc.ref, stats);
+            batch.update(pDoc.ref, st);
         });
         await batch.commit();
     };
 
+    window.resetarTudo = async () => {
+        if(!confirm("CUIDADO: Apagar tudo?")) return;
+        const p = await getDocs(collection(db, "jogadores"));
+        const m = await getDocs(collection(db, "partidas"));
+        p.forEach(d => deleteDoc(d.ref));
+        m.forEach(d => deleteDoc(d.ref));
+    };
 </script>
 </body>
 </html>
