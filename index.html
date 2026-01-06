@@ -2,101 +2,125 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eFootball Arena - LIVE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EFOOTBALL CAMPEONATO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #00ff88; --bg: #0b0e14; --card: #1a1f26; --text: #ffffff; --accent: #ff0055; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; }
-        .container { max-width: 1000px; margin: auto; }
-        header { text-align: center; padding: 20px; border-bottom: 1px solid #2d343e; margin-bottom: 20px; }
-        .live-indicator { background: red; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-
-        /* Tabela */
-        .leaderboard-container { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 30px; border: 1px solid #2d343e; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; color: var(--primary); padding: 12px; border-bottom: 2px solid #2d343e; font-size: 12px; }
-        td { padding: 12px; border-bottom: 1px solid #2d343e; }
-        .pos { font-weight: bold; color: var(--primary); width: 30px; }
-
-        /* Grid de Jogos */
-        .matches-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
-        .match-card { background: var(--card); border-radius: 10px; padding: 15px; border: 1px solid #2d343e; transition: 0.3s; }
-        .match-card.finished { border-left: 5px solid var(--primary); background: #1a2421; }
-        .teams-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: bold; }
-        .score-display { font-size: 20px; background: #000; padding: 5px 12px; border-radius: 5px; color: var(--primary); min-width: 60px; text-align: center; }
+        :root { --primary: #00ff88; --bg: #05070a; --card: #12161d; --text: #e0e0e0; --accent: #ff0055; --border: #232931; }
         
-        /* Admin Section */
-        #admin-panel { background: #1a1f26; padding: 20px; border-radius: 10px; border: 1px dashed var(--primary); margin: 20px 0; display: none; }
-        .score-input { width: 40px; background: #000; border: 1px solid var(--primary); color: #fff; text-align: center; border-radius: 4px; padding: 5px; }
-        
-        input[type="text"], input[type="password"] { padding: 10px; border-radius: 5px; border: 1px solid #333; background: #000; color: #fff; }
-        button { cursor: pointer; border: none; border-radius: 5px; padding: 10px 15px; font-weight: bold; }
-        .btn-main { background: var(--primary); color: #000; }
-        .btn-danger { background: var(--accent); color: #fff; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        .container { max-width: 800px; margin: auto; padding: 15px; }
 
-        #admin-auth { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 9999; }
-        .modal-content { background: var(--card); padding: 40px; border-radius: 15px; text-align: center; }
+        /* Header Estilo App */
+        header { text-align: center; padding: 30px 0; background: linear-gradient(to bottom, #12161d, var(--bg)); border-bottom: 1px solid var(--border); }
+        h1 { margin: 0; font-size: 1.5rem; letter-spacing: 2px; color: #fff; text-transform: uppercase; }
+        .live-tag { background: var(--accent); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 4px; vertical-align: middle; }
+
+        /* Tabela de Classificação Profissional */
+        .leaderboard-card { background: var(--card); border-radius: 16px; padding: 15px; margin-bottom: 25px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { text-align: left; color: #888; font-weight: 500; padding: 12px 8px; border-bottom: 1px solid var(--border); }
+        td { padding: 14px 8px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .pos-num { font-weight: 800; color: var(--primary); width: 25px; }
+        .player-name { font-weight: 600; color: #fff; }
+        .pts-bold { color: var(--primary); font-weight: 800; }
+
+        /* Barra de Busca e Filtros */
+        .search-box { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; color: #fff; margin-bottom: 15px; outline: none; }
+        .filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; }
+        .filters::-webkit-scrollbar { display: none; }
+        .filter-btn { background: var(--card); color: #888; border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; white-space: nowrap; font-size: 13px; font-weight: 600; }
+        .filter-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
+
+        /* Card de Partida Estilo FIFA/eFootball */
+        .matches-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .match-card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid var(--border); transition: 0.2s; }
+        .match-card.finished { border-left: 4px solid var(--primary); opacity: 0.9; }
+        .match-card.finished .score-display { background: #1a2421; color: var(--primary); }
+        
+        .match-header { display: flex; justify-content: space-between; font-size: 10px; color: #666; margin-bottom: 10px; text-transform: uppercase; font-weight: 700; }
+        .teams-container { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .team { flex: 1; font-size: 14px; font-weight: 600; color: #fff; }
+        .team.right { text-align: right; }
+        .score-display { background: #000; padding: 8px 15px; border-radius: 8px; font-size: 18px; font-weight: 800; min-width: 65px; text-align: center; border: 1px solid var(--border); }
+        
+        /* Admin Controls */
+        #admin-panel { background: #1a1f26; padding: 20px; border-radius: 15px; border: 1px dashed var(--primary); margin: 20px 0; display: none; animation: slideIn 0.3s; }
+        .admin-input-group { display: flex; gap: 8px; margin-top: 10px; }
+        .score-edit { width: 45px; height: 45px; background: #000; border: 1px solid var(--primary); color: #fff; text-align: center; border-radius: 8px; font-size: 20px; }
+        
+        button { cursor: pointer; border: none; font-weight: 700; transition: 0.2s; }
+        .btn-action { background: var(--primary); color: #000; border-radius: 8px; padding: 12px; width: 100%; }
+        .btn-admin-access { background: transparent; color: #444; font-size: 12px; margin: 40px auto; display: block; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
+<header>
+    <h1>EFOOTBALL CAMPEONATO <span class="live-tag">LIVE</span></h1>
+</header>
+
 <div class="container">
-    <header>
-        <span class="live-indicator"><i class="fas fa-satellite-dish"></i> AO VIVO</span>
-        <h1>EFOOTBALL CAMPEONATO</h1>
-    </header>
-
-    <div class="leaderboard-container">
-        <h3><i class="fas fa-trophy"></i> Classificação</h3>
-        <table id="leaderboard">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Jogador</th>
-                    <th>Pts</th>
-                    <th>V</th>
-                    <th>E</th>
-                    <th>D</th>
-                    <th>SG</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <div id="admin-panel">
-        <h3>Painel do Administrador</h3>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <input type="text" id="new-player-name" placeholder="Nome do Jogador">
-            <button onclick="addPlayer()" class="btn-main">Salvar Jogador</button>
-            <button onclick="sortearTorneio()" class="btn-main" style="background: #ffaa00;">Gerar Ida e Volta</button>
-            <button onclick="resetarTudo()" class="btn-danger">Limpar Tudo</button>
+    <div class="leaderboard-card">
+        <div class="table-wrapper">
+            <table id="leaderboard">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>JOGADOR</th>
+                        <th>P</th>
+                        <th>V</th>
+                        <th>E</th>
+                        <th>D</th>
+                        <th>SG</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 
-    <h3><i class="fas fa-gamepad"></i> Confrontos</h3>
+    <input type="text" id="search-input" class="search-box" placeholder="Pesquisar jogador..." onkeyup="renderMatches()">
+    
+    <div class="filters">
+        <button class="filter-btn active" onclick="setFilter('todos', this)">Todos</button>
+        <button class="filter-btn" onclick="setFilter('pendentes', this)">Pendentes</button>
+        <button class="filter-btn" onclick="setFilter('ida', this)">1º Turno</button>
+        <button class="filter-btn" onclick="setFilter('volta', this)">2º Turno</button>
+    </div>
+
+    <div id="admin-panel">
+        <h3 style="margin-top:0; color: var(--primary); font-size: 14px;">GERENCIAMENTO</h3>
+        <input type="text" id="new-player-name" placeholder="Nome do Jogador" style="width:100%; padding:12px; border-radius:8px; background:#000; border:1px solid #333; color:#fff; margin-bottom:10px;">
+        <div style="display:flex; gap:10px;">
+            <button onclick="addPlayer()" class="btn-action" style="flex:2">Adicionar</button>
+            <button onclick="sortearTorneio()" class="btn-action" style="flex:2; background:#ffaa00;">Gerar Jogos</button>
+            <button onclick="resetarTudo()" class="btn-action" style="flex:1; background:var(--accent); color:#fff;"><i class="fas fa-trash"></i></button>
+        </div>
+    </div>
+
     <div class="matches-grid" id="matches-list"></div>
 
-    <center>
-        <button onclick="showAuth()" style="background:none; color: #444; margin: 40px 0;">Acesso Admin</button>
-    </center>
+    <button class="btn-admin-access" onclick="showAuth()">ACESSO RESTRITO</button>
 </div>
 
 <div id="admin-auth">
     <div class="modal-content">
-        <h2>Senha de Admin</h2>
-        <input type="password" id="admin-pass">
+        <h3 style="margin-top:0">PIN de Acesso</h3>
+        <input type="password" id="admin-pass" style="font-size: 24px; text-align: center; width: 150px; letter-spacing: 5px;">
         <br><br>
-        <button onclick="checkAuth()" class="btn-main">Entrar</button>
-        <button onclick="closeAuth()" style="background:none; color: white;">Sair</button>
+        <button onclick="checkAuth()" class="btn-action">ENTRAR</button>
+        <button onclick="closeAuth()" style="background:none; color:#888; margin-top:10px;">FECHAR</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, getDocs, writeBatch, deleteDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, updateDoc, doc, getDocs, writeBatch, deleteDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDVSyYqthdpYZmtHtfljrlGs6p9r6MtL4U",
@@ -110,8 +134,8 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     let isAdmin = false;
+    let currentFilter = 'todos';
 
-    // --- AUTH ---
     window.showAuth = () => document.getElementById('admin-auth').style.display = 'flex';
     window.closeAuth = () => document.getElementById('admin-auth').style.display = 'none';
     window.checkAuth = () => {
@@ -119,90 +143,101 @@
             isAdmin = true;
             document.getElementById('admin-panel').style.display = 'block';
             closeAuth();
-        } else { alert("Senha incorreta"); }
+            renderMatches();
+        } else { alert("PIN Incorreto"); }
     };
 
-    // --- ESCUTAR JOGADORES (Sincronizado com F5) ---
+    window.setFilter = (f, btn) => {
+        currentFilter = f;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderMatches();
+    };
+
     onSnapshot(collection(db, "jogadores"), (snap) => {
         const tbody = document.querySelector("#leaderboard tbody");
-        let jogadores = [];
-        snap.forEach(d => jogadores.push({ id: d.id, ...d.data() }));
-        
-        // Ordenação manual para evitar erro de índice no Firebase
-        jogadores.sort((a, b) => b.pts - a.pts || b.sg - a.sg);
-
-        tbody.innerHTML = jogadores.map((p, i) => `
+        let lista = [];
+        snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
+        lista.sort((a, b) => b.pts - a.pts || b.sg - a.sg);
+        tbody.innerHTML = lista.map((p, i) => `
             <tr>
-                <td class="pos">${i+1}º</td>
-                <td>${p.nome}</td>
-                <td><strong>${p.pts}</strong></td>
+                <td class="pos-num">${i+1}º</td>
+                <td class="player-name">${p.nome}</td>
+                <td class="pts-bold">${p.pts}</td>
                 <td>${p.v}</td>
                 <td>${p.e}</td>
                 <td>${p.d}</td>
                 <td>${p.sg}</td>
-            </tr>
-        `).join('');
+            </tr>`).join('');
     });
 
-    // --- ESCUTAR PARTIDAS ---
-    onSnapshot(collection(db, "partidas"), (snap) => {
-        const list = document.getElementById("matches-list");
-        let HTMLpartidas = "";
-        snap.forEach(docSnap => {
-            const m = docSnap.data();
-            const id = docSnap.id;
-            HTMLpartidas += `
+    window.renderMatches = () => {
+        onSnapshot(collection(db, "partidas"), (snap) => {
+            const list = document.getElementById("matches-list");
+            const search = document.getElementById("search-input").value.toLowerCase();
+            let docs = [];
+            snap.forEach(d => docs.push({id: d.id, ...d.data()}));
+
+            let filtrados = docs.filter(m => {
+                const matchesSearch = m.p1.toLowerCase().includes(search) || m.p2.toLowerCase().includes(search);
+                if(currentFilter === 'ida') return matchesSearch && m.turno === 1;
+                if(currentFilter === 'volta') return matchesSearch && m.turno === 2;
+                if(currentFilter === 'pendentes') return matchesSearch && m.status === 'open';
+                return matchesSearch;
+            });
+
+            filtrados.sort((a, b) => (a.status === 'done' ? 1 : -1));
+
+            list.innerHTML = filtrados.map(m => `
                 <div class="match-card ${m.status === 'done' ? 'finished' : ''}">
-                    <div class="teams-row">
-                        <span>${m.p1}</span>
-                        <div class="score-display">${m.g1} x ${m.g2}</div>
-                        <span>${m.p2}</span>
+                    <div class="match-header">
+                        <span>${m.turno === 1 ? '1º Turno - Ida' : '2º Turno - Volta'}</span>
+                        <span>${m.status === 'done' ? 'Encerrado' : 'Aguardando'}</span>
+                    </div>
+                    <div class="teams-container">
+                        <div class="team">${m.p1}</div>
+                        <div class="score-display">${m.g1} - ${m.g2}</div>
+                        <div class="team right">${m.p2}</div>
                     </div>
                     ${isAdmin ? `
-                        <div style="margin-top:10px; text-align:center;">
-                            <input type="number" id="i1-${id}" class="score-input" value="${m.g1}">
-                            <input type="number" id="i2-${id}" class="score-input" value="${m.g2}">
-                            <button onclick="salvarPlacar('${id}')" class="btn-main" style="padding: 2px 8px;">OK</button>
+                        <div class="admin-input-group" style="justify-content:center; padding-top:15px; border-top:1px solid #232931; margin-top:10px;">
+                            <input type="number" id="i1-${m.id}" class="score-edit" value="${m.g1}">
+                            <input type="number" id="i2-${m.id}" class="score-edit" value="${m.g2}">
+                            <button onclick="salvarPlacar('${m.id}')" class="btn-action" style="width:auto; padding:0 20px;">OK</button>
                         </div>
                     ` : ''}
-                </div>`;
+                </div>`).join('');
         });
-        list.innerHTML = HTMLpartidas;
-    });
+    }
+    renderMatches();
 
-    // --- AÇÕES ---
     window.addPlayer = async () => {
         const nome = document.getElementById("new-player-name").value;
-        if(!nome) return;
-        await addDoc(collection(db, "jogadores"), { nome, pts:0, v:0, e:0, d:0, sg:0 });
+        if(nome) await addDoc(collection(db, "jogadores"), { nome, pts:0, v:0, e:0, d:0, sg:0 });
         document.getElementById("new-player-name").value = "";
+    };
+
+    window.sortearTorneio = async () => {
+        const pSnap = await getDocs(collection(db, "jogadores"));
+        const nomes = pSnap.docs.map(d => d.data().nome);
+        if(nomes.length < 2) return alert("Adicione jogadores!");
+        for (let i = 0; i < nomes.length; i++) {
+            for (let j = i + 1; j < nomes.length; j++) {
+                await addDoc(collection(db, "partidas"), { p1: nomes[i], p2: nomes[j], g1:0, g2:0, status:'open', turno: 1 });
+                await addDoc(collection(db, "partidas"), { p1: nomes[j], p2: nomes[i], g1:0, g2:0, status:'open', turno: 2 });
+            }
+        }
+        alert("Campeonato Gerado!");
     };
 
     window.salvarPlacar = async (id) => {
         const g1 = parseInt(document.getElementById(`i1-${id}`).value) || 0;
         const g2 = parseInt(document.getElementById(`i2-${id}`).value) || 0;
         await updateDoc(doc(db, "partidas", id), { g1, g2, status: 'done' });
-        recalcularTabela();
-    };
-
-    window.sortearTorneio = async () => {
-        const pSnap = await getDocs(collection(db, "jogadores"));
-        const nomes = pSnap.docs.map(d => d.data().nome);
-        if(nomes.length < 2) return alert("Adicione jogadores primeiro!");
         
-        for (let i = 0; i < nomes.length; i++) {
-            for (let j = i + 1; j < nomes.length; j++) {
-                await addDoc(collection(db, "partidas"), { p1: nomes[i], p2: nomes[j], g1:0, g2:0, status:'open' });
-                await addDoc(collection(db, "partidas"), { p1: nomes[j], p2: nomes[i], g1:0, g2:0, status:'open' });
-            }
-        }
-    };
-
-    window.recalcularTabela = async () => {
         const pSnap = await getDocs(collection(db, "jogadores"));
         const mSnap = await getDocs(collection(db, "partidas"));
         const batch = writeBatch(db);
-
         pSnap.forEach(pDoc => {
             const pNome = pDoc.data().nome;
             let st = { pts: 0, v: 0, e: 0, d: 0, sg: 0 };
@@ -227,7 +262,7 @@
     };
 
     window.resetarTudo = async () => {
-        if(!confirm("CUIDADO: Apagar tudo?")) return;
+        if(!confirm("Apagar tudo?")) return;
         const p = await getDocs(collection(db, "jogadores"));
         const m = await getDocs(collection(db, "partidas"));
         p.forEach(d => deleteDoc(d.ref));
@@ -236,3 +271,4 @@
 </script>
 </body>
 </html>
+
