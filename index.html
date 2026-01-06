@@ -7,36 +7,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #00ff88; --bg: #0b0e14; --card: #1a1f26; --text: #ffffff; --accent: #ff0055; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; line-height: 1.6; }
         .container { max-width: 1000px; margin: auto; }
-        header { text-align: center; padding: 20px; }
+        
+        header { text-align: center; padding: 20px; border-bottom: 1px solid #2d343e; margin-bottom: 20px; }
         .live-indicator { background: red; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        /* Tabela */
-        .leaderboard-container { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 30px; border: 1px solid #2d343e; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 500px; }
-        th { text-align: left; color: var(--primary); padding: 12px; border-bottom: 2px solid #2d343e; }
+        /* Estilo da Tabela */
+        .leaderboard-container { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 30px; border: 1px solid #2d343e; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; color: var(--primary); padding: 12px; border-bottom: 2px solid #2d343e; text-transform: uppercase; font-size: 12px; }
         td { padding: 12px; border-bottom: 1px solid #2d343e; }
         .pos { font-weight: bold; color: var(--primary); width: 30px; }
 
-        /* Partidas */
+        /* Cards de Jogos */
         .matches-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
         .match-card { background: var(--card); border-radius: 10px; padding: 15px; border: 1px solid #2d343e; transition: 0.3s; }
-        .match-card.finished { border-left: 5px solid var(--primary); background: #1e252e; }
-        .teams-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .score-display { font-size: 22px; font-weight: 800; color: var(--primary); background: #000; padding: 5px 15px; border-radius: 5px; }
+        .match-card.finished { border-left: 5px solid var(--primary); background: #1a2421; }
+        .teams-row { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: bold; }
+        .score-display { font-size: 20px; background: #000; padding: 5px 12px; border-radius: 5px; color: var(--primary); min-width: 60px; text-align: center; }
         
-        /* Admin */
-        .admin-only { display: none; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #444; }
-        .score-input { width: 40px; background: #000; border: 1px solid var(--primary); color: #fff; text-align: center; border-radius: 4px; }
-        button { cursor: pointer; border: none; border-radius: 5px; padding: 8px 12px; font-weight: bold; }
+        /* Área Admin */
+        .admin-section { background: #1a1f26; padding: 20px; border-radius: 10px; border: 1px dashed var(--primary); margin: 20px 0; display: none; }
+        .admin-only { display: none; } /* Controlado pelo JS */
+        
+        input { padding: 10px; border-radius: 5px; border: 1px solid #333; background: #000; color: #fff; margin-bottom: 10px; }
+        button { cursor: pointer; border: none; border-radius: 5px; padding: 10px 15px; font-weight: bold; transition: 0.2s; }
         .btn-main { background: var(--primary); color: #000; }
-        .btn-admin-toggle { background: transparent; color: #555; margin: 40px 0; width: 100%; }
-        
-        #admin-auth { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: var(--card); padding: 30px; border-radius: 10px; text-align: center; }
-        input { padding: 8px; border-radius: 5px; border: 1px solid #444; background: #000; color: #fff; }
+        .btn-main:hover { background: #00cc6e; }
+        .btn-danger { background: var(--accent); color: #fff; }
+
+        /* Login Modal */
+        #admin-auth { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 9999; }
+        .modal-content { background: var(--card); padding: 40px; border-radius: 15px; text-align: center; border: 1px solid var(--primary); }
     </style>
 </head>
 <body>
@@ -44,56 +48,62 @@
 <div class="container">
     <header>
         <span class="live-indicator"><i class="fas fa-satellite-dish"></i> AO VIVO</span>
-        <h1>EFOOTBALL ELITE</h1>
+        <h1>EFOOTBALL ELITE LEAGUE</h1>
     </header>
 
     <div class="leaderboard-container">
-        <h3>Classificação Geral</h3>
+        <h3><i class="fas fa-trophy"></i> Classificação</h3>
         <table id="leaderboard">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Jogador</th>
-                    <th>P</th>
+                    <th>Pts</th>
                     <th>V</th>
                     <th>E</th>
                     <th>D</th>
                     <th>SG</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                </tbody>
         </table>
     </div>
 
-    <h3>Confrontos Ida e Volta</h3>
-    <div class="matches-grid" id="matches-list"></div>
-
-    <div class="admin-only" id="management-tools" style="background: #1a1f26; padding: 20px; border-radius: 10px; margin-top: 20px;">
-        <h4 style="color: var(--primary)">Gerenciar Torneio</h4>
-        <div style="margin-bottom: 20px;">
+    <div id="admin-panel" class="admin-section">
+        <h3><i class="fas fa-user-shield"></i> Painel do Administrador</h3>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <input type="text" id="new-player-name" placeholder="Nome do Jogador">
-            <button onclick="addPlayer()" class="btn-main">Salvar Jogador</button>
+            <button onclick="addPlayer()" class="btn-main">Salvar Jogador no Banco</button>
+            <button onclick="sortearTorneio()" class="btn-main" style="background: #ffaa00;">Sortear Todos os Jogos</button>
+            <button onclick="resetarTudo()" class="btn-danger">Limpar Tudo</button>
         </div>
-        <button onclick="sortearTorneio()" style="background: var(--accent); color: white;">Sortear Jogos (Ida/Volta)</button>
-        <button onclick="recalcularTabela()" style="background: #007bff; color: white;">Atualizar Tabela</button>
+        <p style="font-size: 11px; color: #888;">* Adicione os 12 jogadores antes de sortear.</p>
     </div>
 
-    <button class="btn-admin-toggle" onclick="showAuth()">Acesso Administrativo</button>
+    <h3><i class="fas fa-gamepad"></i> Confrontos</h3>
+    <div class="matches-grid" id="matches-list"></div>
+
+    <center>
+        <button onclick="showAuth()" style="background:none; color: #444; margin-top: 50px;">Acesso Restrito</button>
+    </center>
 </div>
 
 <div id="admin-auth">
     <div class="modal-content">
-        <h3>Senha do Admin</h3>
-        <input type="password" id="admin-pass">
+        <h2>Senha de Admin</h2>
+        <input type="password" id="admin-pass" placeholder="****">
+        <br><br>
         <button onclick="checkAuth()" class="btn-main">Entrar</button>
-        <button onclick="closeAuth()" style="background:none; color: white;">Sair</button>
+        <button onclick="closeAuth()" style="background:none; color: white;">Cancelar</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, getDocs, writeBatch, deleteDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
+    // Suas credenciais
     const firebaseConfig = {
         apiKey: "AIzaSyDVSyYqthdpYZmtHtfljrlGs6p9r6MtL4U",
         authDomain: "efootball-league-f71ac.firebaseapp.com",
@@ -106,71 +116,113 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // --- AUTH ---
+    // Variável para controlar se o admin está logado
+    let isAdmin = false;
+
+    // --- FUNÇÕES DE ADMIN ---
     window.showAuth = () => document.getElementById('admin-auth').style.display = 'flex';
     window.closeAuth = () => document.getElementById('admin-auth').style.display = 'none';
+    
     window.checkAuth = () => {
         if(document.getElementById('admin-pass').value === "9498") {
+            isAdmin = true;
+            document.getElementById('admin-panel').style.display = 'block';
             document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
             closeAuth();
-        } else { alert("Senha Errada!"); }
+            renderMatches(); // Re-renderiza para mostrar os inputs
+        } else {
+            alert("Acesso negado.");
+        }
     };
 
-    // --- TEMPO REAL ---
-    onSnapshot(query(collection(db, "jogadores"), orderBy("pts", "desc"), orderBy("sg", "desc")), (snap) => {
-        const tbody = document.querySelector("#leaderboard tbody");
-        tbody.innerHTML = snap.docs.map((doc, i) => {
-            const p = doc.data();
-            return `<tr><td class="pos">${i+1}º</td><td>${p.nome}</td><td>${p.pts}</td><td>${p.v}</td><td>${p.e}</td><td>${p.d}</td><td>${p.sg}</td></tr>`;
-        }).join('');
-    });
-
-    onSnapshot(collection(db, "partidas"), (snap) => {
-        const list = document.getElementById("matches-list");
-        list.innerHTML = snap.docs.map(docSnap => {
-            const m = docSnap.data();
-            const id = docSnap.id;
-            return `
-                <div class="match-card ${m.status === 'done' ? 'finished' : ''}">
-                    <div class="teams-row">
-                        <span style="flex:1">${m.p1}</span>
-                        <div class="score-display">${m.g1} x ${m.g2}</div>
-                        <span style="flex:1; text-align:right">${m.p2}</span>
-                    </div>
-                    <div class="admin-only">
-                        <input type="number" id="i1-${id}" class="score-input" value="${m.g1}"> x 
-                        <input type="number" id="i2-${id}" class="score-input" value="${m.g2}">
-                        <button onclick="salvarPlacar('${id}')" class="btn-main">OK</button>
-                    </div>
-                </div>`;
-        }).join('');
-    });
-
-    // --- FUNÇÕES ---
+    // --- LOGICA DOS JOGADORES (PERSISTENTE) ---
     window.addPlayer = async () => {
         const nome = document.getElementById("new-player-name").value;
         if(!nome) return;
-        await addDoc(collection(db, "jogadores"), { nome, pts:0, v:0, e:0, d:0, sg:0 });
+        // Salva no Firestore - Isso faz com que ao atualizar o site, o nome continue lá
+        await addDoc(collection(db, "jogadores"), {
+            nome: nome,
+            pts: 0, v: 0, e: 0, d: 0, sg: 0
+        });
         document.getElementById("new-player-name").value = "";
     };
 
-    window.sortearTorneio = async () => {
-        if(!confirm("Gerar novos jogos?")) return;
-        const pSnap = await getDocs(collection(db, "jogadores"));
-        const players = pSnap.docs.map(d => d.data().nome);
-        for (let i = 0; i < players.length; i++) {
-            for (let j = i + 1; j < players.length; j++) {
-                await addDoc(collection(db, "partidas"), { p1: players[i], p2: players[j], g1:0, g2:0, status:'open' });
-                await addDoc(collection(db, "partidas"), { p1: players[j], p2: players[i], g1:0, g2:0, status:'open' });
-            }
-        }
-    };
+    // --- LISTAGEM EM TEMPO REAL ---
+    onSnapshot(query(collection(db, "jogadores"), orderBy("pts", "desc"), orderBy("sg", "desc")), (snap) => {
+        const tbody = document.querySelector("#leaderboard tbody");
+        tbody.innerHTML = "";
+        snap.forEach((doc, i) => {
+            const p = doc.data();
+            tbody.innerHTML += `
+                <tr>
+                    <td class="pos">${i+1}º</td>
+                    <td>${p.nome}</td>
+                    <td><strong>${p.pts}</strong></td>
+                    <td>${p.v}</td>
+                    <td>${p.e}</td>
+                    <td>${p.d}</td>
+                    <td>${p.sg}</td>
+                </tr>
+            `;
+        });
+    });
+
+    // Função separada para renderizar partidas
+    function renderMatches() {
+        onSnapshot(collection(db, "partidas"), (snap) => {
+            const list = document.getElementById("matches-list");
+            list.innerHTML = "";
+            snap.forEach(docSnap => {
+                const m = docSnap.data();
+                const id = docSnap.id;
+                list.innerHTML += `
+                    <div class="match-card ${m.status === 'done' ? 'finished' : ''}">
+                        <div class="teams-row">
+                            <span>${m.p1}</span>
+                            <div class="score-display">${m.g1} x ${m.g2}</div>
+                            <span>${m.p2}</span>
+                        </div>
+                        ${isAdmin ? `
+                            <div style="margin-top:10px; text-align:center;">
+                                <input type="number" id="i1-${id}" class="score-input" value="${m.g1}" style="width:35px">
+                                <input type="number" id="i2-${id}" class="score-input" value="${m.g2}" style="width:35px">
+                                <button onclick="salvarPlacar('${id}')" class="btn-main" style="padding: 2px 10px;">OK</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+        });
+    }
+
+    renderMatches();
 
     window.salvarPlacar = async (id) => {
         const g1 = parseInt(document.getElementById(`i1-${id}`).value);
         const g2 = parseInt(document.getElementById(`i2-${id}`).value);
         await updateDoc(doc(db, "partidas", id), { g1, g2, status: 'done' });
-        recalcularTabela(); // Recalcula tudo automaticamente
+        recalcularTabela();
+    };
+
+    window.sortearTorneio = async () => {
+        const playersSnap = await getDocs(collection(db, "jogadores"));
+        const names = playersSnap.docs.map(d => d.data().nome);
+        if(names.length < 2) return alert("Adicione pelo menos 2 jogadores!");
+        
+        for (let i = 0; i < names.length; i++) {
+            for (let j = i + 1; j < names.length; j++) {
+                await addDoc(collection(db, "partidas"), { p1: names[i], p2: names[j], g1: 0, g2: 0, status: 'open' });
+                await addDoc(collection(db, "partidas"), { p1: names[j], p2: names[i], g1: 0, g2: 0, status: 'open' });
+            }
+        }
+    };
+
+    window.resetarTudo = async () => {
+        if(!confirm("Apagar todos os dados?")) return;
+        const pSnap = await getDocs(collection(db, "jogadores"));
+        const mSnap = await getDocs(collection(db, "partidas"));
+        pSnap.forEach(d => deleteDoc(d.ref));
+        mSnap.forEach(d => deleteDoc(d.ref));
     };
 
     window.recalcularTabela = async () => {
@@ -178,14 +230,13 @@
         const matchesSnap = await getDocs(collection(db, "partidas"));
         const batch = writeBatch(db);
 
-        playersSnap.docs.forEach(pDoc => {
+        playersSnap.forEach(pDoc => {
             const pNome = pDoc.data().nome;
             let stats = { pts: 0, v: 0, e: 0, d: 0, sg: 0 };
 
-            matchesSnap.docs.forEach(mDoc => {
+            matchesSnap.forEach(mDoc => {
                 const m = mDoc.data();
                 if(m.status !== 'done') return;
-
                 if(m.p1 === pNome) {
                     stats.sg += (m.g1 - m.g2);
                     if(m.g1 > m.g2) { stats.pts += 3; stats.v += 1; }
@@ -202,6 +253,7 @@
         });
         await batch.commit();
     };
+
 </script>
 </body>
 </html>
