@@ -25,19 +25,24 @@
         .player-header { width: 100%; padding: 15px; background: none; border: none; color: #fff; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 800; font-size: 14px; }
         .player-content { display: none; padding: 10px; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border); }
 
-        .inner-turno { font-size: 10px; font-weight: 900; padding: 5px 10px; border-radius: 4px; margin: 10px 0 5px 0; display: inline-block; }
-        .t1-label { background: rgba(0, 255, 136, 0.1); color: var(--primary); }
-        .t2-label { background: rgba(255, 170, 0, 0.1); color: var(--gold); }
-        .inner-confronto { color: #555; font-size: 9px; font-weight: 800; margin-top: 10px; text-transform: uppercase; }
+        .inner-turno { font-size: 11px; font-weight: 900; padding: 6px 12px; border-radius: 4px; margin: 20px 0 10px 0; display: block; text-align: center; }
+        .t1-label { background: rgba(0, 255, 136, 0.1); color: var(--primary); border: 1px solid rgba(0,255,136,0.2); }
+        .t2-label { background: rgba(255, 170, 0, 0.1); color: var(--gold); border: 1px solid rgba(255,170,0,0.2); }
+        
+        /* ESPAÇAMENTO ENTRE RODADAS */
+        .rodada-separator { margin-top: 25px; margin-bottom: 10px; padding-left: 5px; border-left: 3px solid var(--primary); color: #fff; font-size: 11px; font-weight: 800; text-transform: uppercase; }
 
         .match-card { background: #0a0d12; border-radius: 8px; padding: 12px; border: 1px solid #1a1f26; margin-bottom: 8px; }
         .score-display { background: #000; padding: 4px 10px; border-radius: 4px; font-weight: 800; min-width: 45px; text-align: center; border: 1px solid #222; }
 
         #admin-panel { background: #0a0d12; padding: 15px; border-radius: 15px; border: 1px solid var(--primary); margin: 15px 0; display: none; }
-        .btn-action { background: var(--primary); color: #000; border-radius: 8px; padding: 12px; width: 100%; font-weight: 800; cursor: pointer; border: none; font-size: 12px; margin-bottom: 8px; }
+        .btn-action { background: var(--primary); color: #000; border-radius: 8px; padding: 12px; width: 100%; font-weight: 800; cursor: pointer; border: none; font-size: 11px; margin-bottom: 8px; }
         .search-box { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; color: #fff; margin-bottom: 15px; outline: none; }
         .btn-config { position: fixed; bottom: 15px; right: 15px; opacity: 0.3; background: none; border: none; color: #fff; font-size: 20px; }
         #admin-auth { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 9999; }
+        
+        .admin-player-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #222; font-size: 12px; }
+        .admin-player-btns button { margin-left: 5px; padding: 6px 10px; border-radius: 4px; border: none; cursor: pointer; font-size: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -60,15 +65,20 @@
 
     <div id="admin-panel">
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:10px;">
-            <span style="color:var(--primary)">GERENCIAMENTO</span>
+            <span style="color:var(--primary)">GERENCIAR COMPETIÇÃO</span>
             <button onclick="logout()" style="color:var(--accent); background:none; border:none;">SAIR</button>
         </div>
-        <input type="text" id="new-player-name" placeholder="Nome do Jogador" style="width:100%; padding:12px; background:#000; border:1px solid #333; color:#fff; border-radius:8px; margin-bottom:10px;">
-        <button onclick="addPlayer()" class="btn-action">ADICIONAR JOGADOR</button>
+        
+        <div style="margin-bottom: 15px; display: flex; gap: 5px;">
+            <input type="text" id="new-player-name" placeholder="Nome do Jogador" style="flex:1; padding:12px; background:#000; border:1px solid #333; color:#fff; border-radius:8px;">
+            <button onclick="addPlayer()" style="padding:0 20px; background:var(--primary); border:none; border-radius:8px; font-weight:800; color:#000;">ADD</button>
+        </div>
+
+        <div id="admin-players-list" style="max-height: 200px; overflow-y: auto; background: #000; border-radius: 8px; padding: 5px; margin-bottom: 15px; border: 1px solid #222;"></div>
         
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
             <button onclick="sortearTorneio()" class="btn-action" style="background:var(--gold)">GERAR TABELA</button>
-            <button onclick="resetarJogos()" class="btn-action" style="background:#444; color:#fff;">RESETAR TUDO</button>
+            <button onclick="resetarJogos()" class="btn-action" style="background:#444; color:#fff;">LIMPAR TUDO</button>
         </div>
         <button onclick="copiarLogWhatsapp()" class="btn-action" style="background:#25D366; color:#fff; margin-top:5px;">
             <i class="fab fa-whatsapp"></i> COPIAR PARA WHATSAPP
@@ -83,7 +93,7 @@
 
 <div id="admin-auth">
     <div style="background:#0a0d12; padding:30px; border-radius:15px; border:1px solid var(--border); text-align:center;">
-        <p>DIGITE O PIN</p>
+        <p>PIN DE ACESSO</p>
         <input type="password" id="admin-pass" style="background:none; border:none; border-bottom:2px solid var(--primary); color:#fff; font-size:24px; width:100px; text-align:center; outline:none;">
         <br><br>
         <button onclick="checkAuth()" class="btn-action">ENTRAR</button>
@@ -115,10 +125,34 @@
             isAdmin = true;
             document.getElementById('admin-panel').style.display = 'block';
             document.getElementById('admin-auth').style.display = 'none';
+            updateAdminPlayersList();
             renderMatchesByPlayer();
         } else alert("PIN Incorreto");
     };
     window.logout = () => { isAdmin = false; document.getElementById('admin-panel').style.display = 'none'; renderMatchesByPlayer(); };
+
+    onSnapshot(collection(db, "jogadores"), (snap) => {
+        globalPlayers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        globalPlayers.sort((a,b) => b.pts - a.pts || b.sg - a.sg || b.v - a.v);
+        renderLeaderboard();
+        if(isAdmin) updateAdminPlayersList();
+    });
+
+    onSnapshot(collection(db, "partidas"), (snap) => {
+        allMatches = snap.docs.map(d => ({id: d.id, ...d.data()}));
+        renderMatchesByPlayer();
+    });
+
+    function renderLeaderboard() {
+        document.querySelector("#leaderboard tbody").innerHTML = globalPlayers.map((p, i) => `
+            <tr>
+                <td style="color:var(--primary); font-weight:800;">${i+1}º</td>
+                <td style="font-weight:600; color:#fff;">${p.nome}</td>
+                <td class="pts-bold">${p.pts}</td>
+                <td>${p.v}</td><td>${p.e}</td><td>${p.d}</td><td>${p.sg}</td>
+                <td>${getFormDots(p.nome)}</td>
+            </tr>`).join('');
+    }
 
     function getFormDots(name) {
         const matches = allMatches.filter(m => m.status === 'done' && (m.p1 === name || m.p2 === name))
@@ -130,23 +164,27 @@
         }).join('');
     }
 
-    onSnapshot(collection(db, "jogadores"), (snap) => {
-        globalPlayers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        globalPlayers.sort((a,b) => b.pts - a.pts || b.sg - a.sg || b.v - a.v);
-        document.querySelector("#leaderboard tbody").innerHTML = globalPlayers.map((p, i) => `
-            <tr>
-                <td style="color:var(--primary); font-weight:800;">${i+1}º</td>
-                <td style="font-weight:600; color:#fff;">${p.nome}</td>
-                <td class="pts-bold">${p.pts}</td>
-                <td>${p.v}</td><td>${p.e}</td><td>${p.d}</td><td>${p.sg}</td>
-                <td>${getFormDots(p.nome)}</td>
-            </tr>`).join('');
-    });
+    function updateAdminPlayersList() {
+        const list = document.getElementById("admin-players-list");
+        list.innerHTML = globalPlayers.map(p => `
+            <div class="admin-player-item">
+                <span>${p.nome}</span>
+                <div class="admin-player-btns">
+                    <button onclick="editPlayer('${p.id}', '${p.nome}')" style="background:#333; color:#fff;">EDITAR</button>
+                    <button onclick="deletePlayer('${p.id}')" style="background:var(--accent); color:#fff;">EXCLUIR</button>
+                </div>
+            </div>
+        `).join('') || '<p style="font-size:10px; text-align:center; padding:10px;">Nenhum jogador.</p>';
+    }
 
-    onSnapshot(collection(db, "partidas"), (snap) => {
-        allMatches = snap.docs.map(d => ({id: d.id, ...d.data()}));
-        renderMatchesByPlayer();
-    });
+    window.editPlayer = async (id, oldName) => {
+        const newName = prompt("Editar nome:", oldName);
+        if(newName && newName !== oldName) await updateDoc(doc(db, "jogadores", id), { nome: newName });
+    };
+
+    window.deletePlayer = async (id) => {
+        if(confirm("Excluir jogador? (Isso não altera tabelas já geradas)")) await deleteDoc(doc(db, "jogadores", id));
+    };
 
     window.renderMatchesByPlayer = () => {
         const container = document.getElementById("matches-by-player");
@@ -155,24 +193,37 @@
         
         container.innerHTML = filteredPlayers.map(player => {
             const pMatches = allMatches.filter(m => m.p1 === player.nome || m.p2 === player.nome);
-            const t1 = pMatches.filter(m => m.turno === 1).sort((a,b) => a.rodada - b.rodada);
-            const t2 = pMatches.filter(m => m.turno === 2).sort((a,b) => a.rodada - b.rodada);
+            
+            const renderTurno = (turnoMatches, titulo) => {
+                if(turnoMatches.length === 0) return '';
+                let html = `<div class="inner-turno ${titulo.includes('IDA') ? 't1-label' : 't2-label'}">${titulo}</div>`;
+                let currentRodada = 0;
+                
+                turnoMatches.sort((a,b) => a.rodada - b.rodada).forEach(m => {
+                    if(m.rodada !== currentRodada) {
+                        currentRodada = m.rodada;
+                        html += `<div class="rodada-separator">Rodada ${currentRodada}</div>`;
+                    }
+                    html += `
+                        <div class="match-card">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div style="flex:1; font-size:12px; font-weight:${m.p1 === player.nome ? '900' : '400'}; color:${m.p1 === player.nome ? 'var(--primary)' : '#fff'}">${m.p1}</div>
+                                <div class="score-display">${m.status === 'done' ? `${m.g1} - ${m.g2}` : 'VS'}</div>
+                                <div style="flex:1; text-align:right; font-size:12px; font-weight:${m.p2 === player.nome ? '900' : '400'}; color:${m.p2 === player.nome ? 'var(--primary)' : '#fff'}">${m.p2}</div>
+                            </div>
+                            ${isAdmin ? `
+                                <div style="display:flex; gap:5px; justify-content:center; margin-top:10px; border-top:1px solid #222; padding-top:10px;">
+                                    <input type="number" id="i1-${m.id}" value="${m.g1}" style="width:35px; background:#000; border:1px solid #444; color:#fff; text-align:center;">
+                                    <input type="number" id="i2-${m.id}" value="${m.g2}" style="width:35px; background:#000; border:1px solid #444; color:#fff; text-align:center;">
+                                    <button onclick="salvarPlacar('${m.id}')" style="background:var(--primary); border:none; border-radius:4px; padding:2px 10px; font-weight:800; font-size:10px;">OK</button>
+                                </div>` : ''}
+                        </div>`;
+                });
+                return html;
+            };
 
-            const renderMatch = (m, idx) => `
-                <div class="inner-confronto">Confronto ${idx + 1}</div>
-                <div class="match-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div style="flex:1; font-size:12px; color:${m.p1 === player.nome ? 'var(--primary)' : '#fff'}">${m.p1}</div>
-                        <div class="score-display">${m.status === 'done' ? `${m.g1} - ${m.g2}` : 'VS'}</div>
-                        <div style="flex:1; text-align:right; font-size:12px; color:${m.p2 === player.nome ? 'var(--primary)' : '#fff'}">${m.p2}</div>
-                    </div>
-                    ${isAdmin ? `
-                        <div style="display:flex; gap:5px; justify-content:center; margin-top:10px; border-top:1px solid #222; padding-top:10px;">
-                            <input type="number" id="i1-${m.id}" value="${m.g1}" style="width:35px; background:#000; border:1px solid #444; color:#fff; text-align:center;">
-                            <input type="number" id="i2-${m.id}" value="${m.g2}" style="width:35px; background:#000; border:1px solid #444; color:#fff; text-align:center;">
-                            <button onclick="salvarPlacar('${m.id}')" style="background:var(--primary); border:none; border-radius:4px; padding:2px 10px; font-weight:800; font-size:10px;">OK</button>
-                        </div>` : ''}
-                </div>`;
+            const ida = pMatches.filter(m => m.turno === 1);
+            const volta = pMatches.filter(m => m.turno === 2);
 
             return `
                 <div class="player-group">
@@ -181,10 +232,8 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="player-content" id="content-${player.id}">
-                        ${t1.length > 0 ? `<div class="inner-turno t1-label">1º TURNO</div>` : ''}
-                        ${t1.map((m, i) => renderMatch(m, i)).join('')}
-                        ${t2.length > 0 ? `<div class="inner-turno t2-label" style="margin-top:20px;">2º TURNO</div>` : ''}
-                        ${t2.map((m, i) => renderMatch(m, i)).join('')}
+                        ${renderTurno(ida, "JOGO DE IDA (1º TURNO)")}
+                        ${renderTurno(volta, "JOGO DE VOLTA (2º TURNO)")}
                     </div>
                 </div>`;
         }).join('');
@@ -199,29 +248,6 @@
         const n = document.getElementById("new-player-name").value.trim();
         if(n) await addDoc(collection(db, "jogadores"), { nome: n, pts:0, v:0, e:0, d:0, sg:0 });
         document.getElementById("new-player-name").value = "";
-    };
-
-    window.sortearTorneio = async () => {
-        if(globalPlayers.length < 2) return alert("Mínimo 2 jogadores");
-        const batch = writeBatch(db);
-        let p = [...globalPlayers];
-        if (p.length % 2 !== 0) p.push({ nome: "FOLGA", id: "bye" });
-        const n = p.length;
-        const totalR = n - 1;
-
-        for (let r = 0; r < totalR; r++) {
-            for (let i = 0; i < n / 2; i++) {
-                const p1 = p[i];
-                const p2 = p[n - 1 - i];
-                if (p1.id !== "bye" && p2.id !== "bye") {
-                    batch.set(doc(collection(db, "partidas")), { p1: p1.nome, p2: p2.nome, g1:0, g2:0, status:'open', turno:1, rodada: r + 1, timestamp: Date.now() });
-                    batch.set(doc(collection(db, "partidas")), { p1: p2.nome, p2: p1.nome, g1:0, g2:0, status:'open', turno:2, rodada: r + 1, timestamp: Date.now() });
-                }
-            }
-            p.splice(1, 0, p.pop());
-        }
-        await batch.commit();
-        alert("Tabela Gerada!");
     };
 
     window.salvarPlacar = async (id) => {
@@ -244,8 +270,34 @@
         await batch.commit();
     };
 
+    window.sortearTorneio = async () => {
+        if(globalPlayers.length < 2) return alert("Mínimo 2 jogadores");
+        if(!confirm("Isso excluirá os jogos atuais e criará novos. Continuar?")) return;
+        const mSnap = await getDocs(collection(db, "partidas"));
+        const batch = writeBatch(db);
+        mSnap.forEach(d => batch.delete(d.ref));
+        
+        let p = [...globalPlayers];
+        if (p.length % 2 !== 0) p.push({ nome: "FOLGA", id: "bye" });
+        const n = p.length;
+        const totalR = n - 1;
+
+        for (let r = 0; r < totalR; r++) {
+            for (let i = 0; i < n / 2; i++) {
+                const p1 = p[i]; const p2 = p[n - 1 - i];
+                if (p1.id !== "bye" && p2.id !== "bye") {
+                    batch.set(doc(collection(db, "partidas")), { p1: p1.nome, p2: p2.nome, g1:0, g2:0, status:'open', turno:1, rodada: r + 1, timestamp: Date.now() });
+                    batch.set(doc(collection(db, "partidas")), { p1: p2.nome, p2: p1.nome, g1:0, g2:0, status:'open', turno:2, rodada: r + 1, timestamp: Date.now() });
+                }
+            }
+            p.splice(1, 0, p.pop());
+        }
+        await batch.commit();
+        alert("Tabela Gerada!");
+    };
+
     window.resetarJogos = async () => {
-        if(!confirm("Resetar tudo?")) return;
+        if(!confirm("Zerar tudo?")) return;
         const m = await getDocs(collection(db, "partidas"));
         const p = await getDocs(collection(db, "jogadores"));
         const batch = writeBatch(db);
@@ -256,16 +308,22 @@
 
     window.copiarLogWhatsapp = () => {
         let log = "*🏆 EFOOTBALL LEAGUE*\n\n";
-        for(let t=1; t<=2; t++) {
-            log += `*${t}º TURNO*\n`;
-            const matches = allMatches.filter(m => m.turno === t).sort((a,b) => a.rodada - b.rodada);
-            matches.forEach((m, i) => {
-                log += `• Confronto: ${m.p1} ${m.status==='done'?m.g1:''} x ${m.status==='done'?m.g2:''} ${m.p2}\n`;
+        [1, 2].forEach(t => {
+            log += `*${t === 1 ? 'IDA (Jogo de IDA)' : 'VOLTA (Jogo de VOLTA)'}*\n`;
+            const turnoMatches = allMatches.filter(m => m.turno === t).sort((a,b) => a.rodada - b.rodada);
+            let currentR = 0;
+            turnoMatches.forEach(m => {
+                if(m.rodada !== currentR) {
+                    currentR = m.rodada;
+                    log += `\n• Rodada ${currentR}:\n`;
+                }
+                log += `${m.p1} ${m.status==='done'?m.g1:''} x ${m.status==='done'?m.g2:''} ${m.p2}\n`;
             });
             log += "\n";
-        }
-        navigator.clipboard.writeText(log).then(() => alert("Copiado!"));
+        });
+        navigator.clipboard.writeText(log).then(() => alert("Copiado com sucesso!"));
     };
 </script>
 </body>
 </html>
+
