@@ -65,13 +65,18 @@
             <span style="color:var(--primary)">GERENCIAR JOGADORES</span>
             <button onclick="logout()" style="color:var(--accent); background:none; border:none;">SAIR</button>
         </div>
-        <div id="admin-players-list" style="margin-bottom:15px; max-height:200px; overflow-y:auto;"></div>
+        <div id="admin-players-list" style="margin-bottom:15px; max-height:150px; overflow-y:auto;"></div>
         <input type="text" id="new-player-name" placeholder="Novo Jogador" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#fff; border-radius:8px;">
         <button onclick="addPlayer()" class="btn-action" style="margin-top:10px;">CADASTRAR</button>
+        
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
             <button onclick="sortearTorneio()" class="btn-action" style="background:var(--gold)">GERAR TABELA</button>
             <button onclick="resetarJogos()" class="btn-action" style="background:#444; color:#fff;">LIMPAR TUDO</button>
         </div>
+        
+        <button onclick="copiarLogWhatsapp()" class="btn-action" style="margin-top:10px; background:#25D366; color:#fff;">
+            <i class="fab fa-whatsapp"></i> COPIAR CONFRONTOS (LOG)
+        </button>
     </div>
 
     <input type="text" id="search-input" class="search-box" placeholder="Pesquisar jogador..." onkeyup="renderMatchesByPlayer()">
@@ -140,6 +145,34 @@
             </div>`).join('');
     };
 
+    // --- LOG PARA WHATSAPP ---
+    window.copiarLogWhatsapp = () => {
+        if(allMatches.length === 0) return alert("Nenhum jogo gerado!");
+        
+        let log = "🏆 *CONFRONTOS EFOOTBALL LEAGUE*\n\n";
+        
+        // Separar por turnos e rodadas
+        for(let t = 1; t <= 2; t++) {
+            log += `*${t}º TURNO (${t === 1 ? 'IDA' : 'VOLTA'})*\n`;
+            const turnoMatches = allMatches.filter(m => m.turno === t).sort((a,b) => a.rodada - b.rodada);
+            
+            let currentRodada = 0;
+            turnoMatches.forEach(m => {
+                if(m.rodada !== currentRodada) {
+                    currentRodada = m.rodada;
+                    log += `\n📍 *Rodada ${currentRodada}*\n`;
+                }
+                const placar = m.status === 'done' ? ` ${m.g1} x ${m.g2} ` : " vs ";
+                log += `• ${m.p1}${placar}${m.p2}\n`;
+            });
+            log += "\n";
+        }
+        
+        navigator.clipboard.writeText(log).then(() => {
+            alert("Log copiado para a área de transferência! Cole no WhatsApp.");
+        });
+    };
+
     window.togglePlayer = (id) => {
         const content = document.getElementById(`content-${id}`);
         const icon = document.getElementById(`icon-${id}`);
@@ -161,7 +194,6 @@
     onSnapshot(collection(db, "jogadores"), (snap) => {
         globalPlayers = [];
         snap.forEach(d => globalPlayers.push({ id: d.id, ...d.data() }));
-        // Ordenação: Pontos -> Saldo -> Vitórias
         globalPlayers.sort((a,b) => b.pts - a.pts || b.sg - a.sg || b.v - a.v);
         document.querySelector("#leaderboard tbody").innerHTML = globalPlayers.map((p, i) => `
             <tr>
@@ -172,7 +204,6 @@
                 <td>${getFormDots(p.nome)}</td>
             </tr>`).join('');
         if(isAdmin) renderAdminList();
-        renderMatchesByPlayer();
     });
 
     onSnapshot(collection(db, "partidas"), (snap) => {
@@ -247,11 +278,8 @@
     window.salvarPlacar = async (id) => {
         const g1 = parseInt(document.getElementById(`i1-${id}`).value) || 0;
         const g2 = parseInt(document.getElementById(`i2-${id}`).value) || 0;
-        
-        // 1. Atualiza a partida específica
         await updateDoc(doc(db, "partidas", id), { g1, g2, status: 'done', timestamp: Date.now() });
         
-        // 2. Recalcula TODOS os jogadores com base em todas as partidas finalizadas
         const pSnap = await getDocs(collection(db, "jogadores"));
         const mSnap = await getDocs(collection(db, "partidas"));
         const batch = writeBatch(db);
@@ -259,23 +287,10 @@
         pSnap.forEach(pDoc => {
             const n = pDoc.data().nome;
             let st = { pts:0, v:0, e:0, d:0, sg:0 };
-            
             mSnap.forEach(mDoc => {
-                const m = mDoc.data(); 
-                if(m.status !== 'done') return;
-                
-                if(m.p1 === n) { 
-                    st.sg += (m.g1 - m.g2); 
-                    if(m.g1 > m.g2) { st.pts += 3; st.v++; } 
-                    else if(m.g1 === m.g2) { st.pts += 1; st.e++; } 
-                    else { st.d++; } 
-                }
-                else if(m.p2 === n) { 
-                    st.sg += (m.g2 - m.g1); 
-                    if(m.g2 > m.g1) { st.pts += 3; st.v++; } 
-                    else if(m.g1 === m.g2) { st.pts += 1; st.e++; } 
-                    else { st.d++; } 
-                }
+                const m = mDoc.data(); if(m.status !== 'done') return;
+                if(m.p1 === n) { st.sg += (m.g1 - m.g2); if(m.g1 > m.g2) { st.pts += 3; st.v++; } else if(m.g1 === m.g2) { st.pts += 1; st.e++; } else st.d++; }
+                else if(m.p2 === n) { st.sg += (m.g2 - m.g1); if(m.g2 > m.g1) { st.pts += 3; st.v++; } else if(m.g1 === m.g2) { st.pts += 1; st.e++; } else st.d++; }
             });
             batch.update(pDoc.ref, st);
         });
