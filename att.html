@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EFOOTBALL CAMPEONATO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #00ff88; --bg: #05070a; --card: #12161d; --text: #e0e0e0; --accent: #ff0055; --border: #232931; --gold: #ffaa00; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 50px; }
+        .container { max-width: 800px; margin: auto; padding: 15px; }
+        header { text-align: center; padding: 25px 0; background: linear-gradient(to bottom, #12161d, var(--bg)); border-bottom: 1px solid var(--border); }
+        h1 { margin: 0; font-size: 1.2rem; letter-spacing: 2px; color: #fff; }
+
+        /* Estilo do Destaque Único */
+        .highlight-container { margin-bottom: 20px; }
+        .high-card { background: linear-gradient(135deg, var(--card) 0%, #1a222c 100%); padding: 15px; border-radius: 12px; border: 1px solid var(--gold); text-align: center; display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .high-card i { color: var(--gold); font-size: 24px; }
+        .high-info { text-align: left; }
+        .high-title { font-size: 10px; color: var(--gold); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
+        .high-name { font-size: 16px; font-weight: 800; color: #fff; display: block; }
+
+        /* Estilo da Agenda */
+        .agenda-section { margin-bottom: 25px; }
+        .section-title { font-size: 11px; font-weight: 800; color: var(--primary); letter-spacing: 1px; margin-bottom: 10px; display: block; }
+        .agenda-grid { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .agenda-item { background: #1a1f26; min-width: 160px; padding: 10px; border-radius: 10px; border: 1px solid var(--border); flex-shrink: 0; }
+        .agenda-names { font-size: 11px; color: #fff; text-align: center; font-weight: 600; }
+        .agenda-vs { color: var(--accent); margin: 0 5px; font-size: 9px; }
+
+        /* Tabelas e Filtros */
+        .leaderboard-card { background: var(--card); border-radius: 16px; padding: 15px; margin-bottom: 25px; border: 1px solid var(--border); }
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { text-align: left; color: #888; padding: 10px; border-bottom: 1px solid var(--border); }
+        td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .pts-bold { color: var(--primary); font-weight: 800; }
+        .search-box { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; color: #fff; margin-bottom: 15px; outline: none; }
+        .filters { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 15px; }
+        .filter-btn { background: var(--card); color: #888; border: 1px solid var(--border); padding: 8px 15px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer; }
+        .filter-btn.active { background: var(--primary); color: #000; }
+        .matches-grid { display: grid; gap: 10px; }
+        .match-card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid var(--border); }
+        .match-card.finished { border-left: 4px solid var(--primary); }
+        .score-display { background: #000; padding: 5px 12px; border-radius: 6px; font-weight: 800; color: #fff; }
+
+        /* Painel Admin e Aba Retrátil */
+        #admin-panel { background: #0a0d12; padding: 15px; border-radius: 15px; border: 1px solid var(--primary); margin: 15px 0; display: none; }
+        .admin-accordion { background: #1a1f26; border: 1px solid #232931; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
+        .accordion-header { width: 100%; padding: 12px; background: none; border: none; color: #fff; text-align: left; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .accordion-content { padding: 10px; display: none; border-top: 1px solid #232931; max-height: 250px; overflow-y: auto; }
+        
+        .btn-action { background: var(--primary); color: #000; border-radius: 8px; padding: 10px; width: 100%; font-weight: 800; cursor: pointer; border: none; font-size: 12px; }
+        .btn-config { position: fixed; bottom: 15px; right: 15px; background: none; color: #1a1f26; opacity: 0.3; border: none; }
+        #admin-auth { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 9999; }
+        .modal-content { background: #0a0d12; padding: 25px; border-radius: 15px; text-align: center; border: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>EFOOTBALL CAMPEONATO <span style="background:var(--accent); font-size:9px; padding:2px 5px; border-radius:3px;">LIVE</span></h1>
+</header>
+
+<div class="container">
+    
+    <div class="highlight-container" id="highlight-div" style="display:none;">
+        <div class="high-card">
+            <i class="fas fa-bullseye"></i>
+            <div class="high-info">
+                <span class="high-title">MAIOR ARTILHEIRO</span>
+                <span class="high-name" id="best-attack">-</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="agenda-section" id="agenda-container" style="display:none;">
+        <span class="section-title"><i class="far fa-calendar-alt"></i> PRÓXIMAS PARTIDAS</span>
+        <div class="agenda-grid" id="agenda-list"></div>
+    </div>
+
+    <div class="leaderboard-card">
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <span style="font-size:11px; color:var(--primary); font-weight:800;">TABELA DE PONTOS</span>
+            <button onclick="copySummary()" style="background:var(--border); color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:9px; cursor:pointer;">COPIAR</button>
+        </div>
+        <div class="table-wrapper">
+            <table id="leaderboard">
+                <thead>
+                    <tr><th>#</th><th>JOGADOR</th><th>P</th><th>V</th><th>E</th><th>D</th><th>SG</th></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <input type="text" id="search-input" class="search-box" placeholder="Filtrar por nome do jogador..." onkeyup="renderMatches()">
+    
+    <div class="filters">
+        <button class="filter-btn active" onclick="setFilter('todos', this)">Todos</button>
+        <button class="filter-btn" onclick="setFilter('pendentes', this)">Pendentes</button>
+        <button class="filter-btn" onclick="setFilter('ida', this)">1º Turno</button>
+        <button class="filter-btn" onclick="setFilter('volta', this)">2º Turno</button>
+    </div>
+
+    <div id="admin-panel">
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+            <span style="font-size:10px; color:var(--primary);">PAINEL CONTROLE</span>
+            <button onclick="logout()" style="background:none; color:var(--accent); font-size:10px; border:none;">SAIR</button>
+        </div>
+
+        <div class="admin-accordion">
+            <button class="accordion-header" onclick="toggleAccordion()">
+                GERENCIAR JOGADORES (NOMES) <i class="fas fa-chevron-down" id="acc-icon"></i>
+            </button>
+            <div class="accordion-content" id="acc-content">
+                <div id="player-edit-list" style="margin-bottom:10px;"></div>
+                <input type="text" id="new-player-name" placeholder="Nome do Jogador" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#fff; border-radius:8px; margin-bottom:10px;">
+                <button onclick="addPlayer()" class="btn-action">Adicionar à Lista</button>
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <button onclick="sortearTorneio()" class="btn-action" style="background:var(--gold)">Gerar Confrontos</button>
+            <button onclick="resetarJogos()" class="btn-action" style="background:#444; color:#fff;">Limpar Jogos</button>
+            <button onclick="resetarTudo()" class="btn-action" style="background:var(--accent); color:#fff; grid-column: span 2;">Reset Total (Cuidado)</button>
+        </div>
+    </div>
+
+    <div class="matches-grid" id="matches-list"></div>
+</div>
+
+<button class="btn-config" onclick="showAuth()"><i class="fas fa-cog"></i></button>
+
+<div id="admin-auth">
+    <div class="modal-content">
+        <input type="password" id="admin-pass" placeholder="PIN" style="background:none; border:none; border-bottom:2px solid var(--primary); color:#fff; font-size:24px; width:100px; text-align:center; outline:none;">
+        <br><br>
+        <button onclick="checkAuth()" class="btn-action">ENTRAR</button>
+        <button onclick="closeAuth()" style="background:none; border:none; color:#444; margin-top:10px; font-size:10px;">FECHAR</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, updateDoc, doc, getDocs, writeBatch, deleteDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVSyYqthdpYZmtHtfljrlGs6p9r6MtL4U",
+        authDomain: "efootball-league-f71ac.firebaseapp.com",
+        projectId: "efootball-league-f71ac",
+        storageBucket: "efootball-league-f71ac.firebasestorage.app",
+        messagingSenderId: "887037026578",
+        appId: "1:887037026578:web:8513b9dd71597ccca7d3cb"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    let isAdmin = false;
+    let currentFilter = 'todos';
+    let globalPlayers = [];
+    let allMatches = [];
+
+    // --- Accordion Logic ---
+    window.toggleAccordion = () => {
+        const content = document.getElementById('acc-content');
+        const icon = document.getElementById('acc-icon');
+        const isOpen = content.style.display === 'block';
+        content.style.display = isOpen ? 'none' : 'block';
+        icon.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    };
+
+    // --- Auth ---
+    window.showAuth = () => document.getElementById('admin-auth').style.display = 'flex';
+    window.closeAuth = () => { document.getElementById('admin-auth').style.display = 'none'; document.getElementById('admin-pass').value = ''; };
+    window.checkAuth = () => {
+        if(document.getElementById('admin-pass').value === "9498") {
+            isAdmin = true;
+            document.getElementById('admin-panel').style.display = 'block';
+            closeAuth(); renderMatches(); renderAdminPlayerList();
+        } else alert("PIN Incorreto");
+    };
+    window.logout = () => { isAdmin = false; document.getElementById('admin-panel').style.display = 'none'; renderMatches(); };
+
+    // --- Dados Jogadores ---
+    onSnapshot(collection(db, "jogadores"), (snap) => {
+        globalPlayers = [];
+        snap.forEach(d => globalPlayers.push({ id: d.id, ...d.data() }));
+        globalPlayers.sort((a, b) => b.pts - a.pts || b.sg - a.sg);
+        
+        document.querySelector("#leaderboard tbody").innerHTML = globalPlayers.map((p, i) => `
+            <tr>
+                <td style="font-weight:800; color:var(--primary)">${i+1}º</td>
+                <td style="font-weight:600; color:#fff">${p.nome}</td>
+                <td class="pts-bold">${p.pts}</td>
+                <td>${p.v}</td><td>${p.e}</td><td>${p.d}</td><td>${p.sg}</td>
+            </tr>`).join('');
+        
+        updateBestAttack();
+        if(isAdmin) renderAdminPlayerList();
+    });
+
+    async function updateBestAttack() {
+        const matchesSnap = await getDocs(collection(db, "partidas"));
+        let stats = {};
+        let someMatchDone = false;
+        globalPlayers.forEach(p => stats[p.nome] = 0);
+        matchesSnap.forEach(doc => {
+            const m = doc.data();
+            if(m.status === 'done') {
+                someMatchDone = true;
+                if(stats.hasOwnProperty(m.p1)) stats[m.p1] += m.g1;
+                if(stats.hasOwnProperty(m.p2)) stats[m.p2] += m.g2;
+            }
+        });
+        const highDiv = document.getElementById('highlight-div');
+        if(someMatchDone && globalPlayers.length > 0) {
+            const sorted = Object.entries(stats).sort((a,b) => b[1] - a[1]);
+            document.getElementById('best-attack').innerText = `${sorted[0][0]} (${sorted[0][1]} gols)`;
+            highDiv.style.display = 'block';
+        } else { highDiv.style.display = 'none'; }
+    }
+
+    // --- Partidas e Agenda ---
+    onSnapshot(collection(db, "partidas"), (snap) => {
+        allMatches = [];
+        snap.forEach(d => allMatches.push({id: d.id, ...d.data()}));
+        renderMatchesList();
+        renderAgenda();
+    });
+
+    function renderMatchesList() {
+        const list = document.getElementById("matches-list");
+        const search = document.getElementById("search-input").value.toLowerCase();
+        let filtrados = allMatches.filter(m => {
+            const searchMatch = m.p1.toLowerCase().includes(search) || m.p2.toLowerCase().includes(search);
+            if(currentFilter === 'ida') return searchMatch && m.turno === 1;
+            if(currentFilter === 'volta') return searchMatch && m.turno === 2;
+            if(currentFilter === 'pendentes') return searchMatch && m.status === 'open';
+            return searchMatch;
+        });
+        filtrados.sort((a,b) => a.status === 'done' ? 1 : -1);
+        list.innerHTML = filtrados.map(m => `
+            <div class="match-card ${m.status === 'done' ? 'finished' : ''}">
+                <div style="display:flex; justify-content:space-between; font-size:9px; color:#555; margin-bottom:8px; font-weight:700;">
+                    <span>${m.turno === 1 ? '1º TURNO' : '2º TURNO'}</span>
+                    <span>${m.status === 'done' ? 'FINALIZADO' : 'PENDENTE'}</span>
+                </div>
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                    <div style="flex:1; font-size:13px; color:#fff; font-weight:600;">${m.p1}</div>
+                    <div class="score-display">${m.g1} - ${m.g2}</div>
+                    <div style="flex:1; font-size:13px; color:#fff; font-weight:600; text-align:right;">${m.p2}</div>
+                </div>
+                ${isAdmin ? `
+                    <div style="display:flex; gap:8px; justify-content:center; margin-top:12px; padding-top:10px; border-top:1px solid #232931;">
+                        <input type="number" id="i1-${m.id}" value="${m.g1}" style="width:40px; height:35px; background:#000; border:1px solid var(--primary); color:#fff; text-align:center; border-radius:5px;">
+                        <input type="number" id="i2-${m.id}" value="${m.g2}" style="width:40px; height:35px; background:#000; border:1px solid var(--primary); color:#fff; text-align:center; border-radius:5px;">
+                        <button onclick="salvarPlacar('${m.id}')" class="btn-action" style="width:auto; padding:0 15px;">OK</button>
+                    </div>
+                ` : ''}
+            </div>`).join('');
+    }
+
+    function renderAgenda() {
+        const pendentes = allMatches.filter(m => m.status === 'open').slice(0, 5);
+        const container = document.getElementById('agenda-container');
+        if(pendentes.length > 0) {
+            container.style.display = 'block';
+            document.getElementById('agenda-list').innerHTML = pendentes.map(m => `
+                <div class="agenda-item">
+                    <div class="agenda-names">${m.p1} <span class="agenda-vs">VS</span> ${m.p2}</div>
+                    <div style="font-size:8px; color:#555; text-align:center; margin-top:5px;">TURNO ${m.turno}</div>
+                </div>
+            `).join('');
+        } else { container.style.display = 'none'; }
+    }
+
+    // --- Funções CRUD ---
+    window.setFilter = (f, btn) => {
+        currentFilter = f;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active'); renderMatchesList();
+    };
+
+    window.addPlayer = async () => {
+        const nome = document.getElementById("new-player-name").value;
+        if(nome) await addDoc(collection(db, "jogadores"), { nome, pts:0, v:0, e:0, d:0, sg:0 });
+        document.getElementById("new-player-name").value = "";
+    };
+
+    window.editPlayerName = async (id, oldName) => {
+        const novo = prompt("Alterar nome de " + oldName + " para:", oldName);
+        if(novo && novo !== oldName) await updateDoc(doc(db, "jogadores", id), { nome: novo });
+    };
+
+    window.renderAdminPlayerList = () => {
+        document.getElementById('player-edit-list').innerHTML = globalPlayers.map(p => `
+            <div style="display:flex; justify-content:space-between; background:#05070a; padding:8px 10px; border-radius:6px; margin-bottom:5px; font-size:11px; border:1px solid #1a1f26;">
+                <span>${p.nome}</span>
+                <button onclick="editPlayerName('${p.id}', '${p.nome}')" style="background:none; border:none; color:var(--primary); cursor:pointer;"><i class="fas fa-edit"></i></button>
+            </div>
+        `).join('');
+    };
+
+    window.sortearTorneio = async () => {
+        const nomes = globalPlayers.map(p => p.nome);
+        if(nomes.length < 2) return alert("Mínimo de 2 jogadores!");
+        if(!confirm("Gerar confrontos para " + nomes.length + " jogadores?")) return;
+        for (let i = 0; i < nomes.length; i++) {
+            for (let j = i + 1; j < nomes.length; j++) {
+                await addDoc(collection(db, "partidas"), { p1: nomes[i], p2: nomes[j], g1:0, g2:0, status:'open', turno: 1 });
+                await addDoc(collection(db, "partidas"), { p1: nomes[j], p2: nomes[i], g1:0, g2:0, status:'open', turno: 2 });
+            }
+        }
+    };
+
+    window.salvarPlacar = async (id) => {
+        const g1 = parseInt(document.getElementById(`i1-${id}`).value) || 0;
+        const g2 = parseInt(document.getElementById(`i2-${id}`).value) || 0;
+        await updateDoc(doc(db, "partidas", id), { g1, g2, status: 'done' });
+        
+        const pSnap = await getDocs(collection(db, "jogadores"));
+        const mSnap = await getDocs(collection(db, "partidas"));
+        const batch = writeBatch(db);
+        pSnap.forEach(pDoc => {
+            const pNome = pDoc.data().nome;
+            let st = { pts: 0, v: 0, e: 0, d: 0, sg: 0 };
+            mSnap.forEach(mDoc => {
+                const m = mDoc.data();
+                if(m.status !== 'done') return;
+                if(m.p1 === pNome) {
+                    st.sg += (m.g1 - m.g2);
+                    if(m.g1 > m.g2) { st.pts += 3; st.v += 1; }
+                    else if(m.g1 === m.g2) { st.pts += 1; st.e += 1; }
+                    else st.d += 1;
+                } else if(m.p2 === pNome) {
+                    st.sg += (m.g2 - m.g1);
+                    if(m.g2 > m.g1) { st.pts += 3; st.v += 1; }
+                    else if(m.g1 === m.g2) { st.pts += 1; st.e += 1; }
+                    else st.d += 1;
+                }
+            });
+            batch.update(pDoc.ref, st);
+        });
+        await batch.commit();
+    };
+
+    window.resetarJogos = async () => {
+        if(!confirm("Resetar apenas jogos?")) return;
+        const m = await getDocs(collection(db, "partidas"));
+        const p = await getDocs(collection(db, "jogadores"));
+        const batch = writeBatch(db);
+        m.forEach(d => batch.delete(d.ref));
+        p.forEach(d => batch.update(d.ref, { pts: 0, v: 0, e: 0, d: 0, sg: 0 }));
+        await batch.commit();
+    };
+
+    window.resetarTudo = async () => {
+        if(!confirm("Apagar TUDO?")) return;
+        const p = await getDocs(collection(db, "jogadores"));
+        const m = await getDocs(collection(db, "partidas"));
+        p.forEach(d => deleteDoc(d.ref));
+        m.forEach(d => deleteDoc(d.ref));
+    };
+
+    window.copySummary = () => {
+        let txt = "🏆 *EFOOTBALL PRO LEAGUE*\n\n";
+        globalPlayers.forEach((p, i) => { txt += `${i+1}º ${p.nome.toUpperCase()} - ${p.pts}pts\n`; });
+        navigator.clipboard.writeText(txt).then(() => alert("Copiado!"));
+    };
+
+    window.renderMatches = renderMatchesList;
+</script>
+</body>
+</html>
