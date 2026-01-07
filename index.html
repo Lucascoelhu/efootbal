@@ -18,10 +18,8 @@
         th { text-align: left; color: #888; padding: 10px; border-bottom: 1px solid var(--border); font-size: 10px; }
         td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .pts-bold { color: var(--primary); font-weight: 800; }
-        .form-dot { height: 8px; width: 8px; border-radius: 50%; display: inline-block; margin-right: 2px; }
-        .dot-v { background: #00ff88; } .dot-e { background: #888; } .dot-d { background: #ff0055; }
 
-        /* ESTILO DOS ÚLTIMOS RESULTADOS (SCROLL HORIZONTAL) */
+        /* ESTILO DOS ÚLTIMOS RESULTADOS */
         #recent-results::-webkit-scrollbar { display: none; }
         .recent-match-item {
             background: #000;
@@ -69,7 +67,7 @@
         <div class="table-wrapper">
             <table id="leaderboard">
                 <thead>
-                    <tr><th>#</th><th>JOGADOR</th><th>P</th><th>V</th><th>E</th><th>D</th><th>SG</th><th>ÚLT. 5</th></tr>
+                    <tr><th>#</th><th>JOGADOR</th><th>P</th><th>V</th><th>E</th><th>D</th><th>SG</th></tr>
                 </thead>
                 <tbody></tbody>
             </table>
@@ -163,7 +161,7 @@
     onSnapshot(collection(db, "partidas"), (snap) => {
         allMatches = snap.docs.map(d => ({id: d.id, ...d.data()}));
         renderMatchesByPlayer();
-        renderRecentResults(); // NOVA CHAMADA
+        renderRecentResults();
     });
 
     function renderLeaderboard() {
@@ -173,7 +171,6 @@
                 <td style="font-weight:600; color:#fff;">${p.nome}</td>
                 <td class="pts-bold">${p.pts}</td>
                 <td>${p.v}</td><td>${p.e}</td><td>${p.d}</td><td>${p.sg}</td>
-                <td>${getFormDots(p.nome)}</td>
             </tr>`).join('');
     }
 
@@ -195,16 +192,6 @@
                 <div class="score">${m.g1} - ${m.g2}</div>
             </div>
         `).join('');
-    }
-
-    function getFormDots(name) {
-        const matches = allMatches.filter(m => m.status === 'done' && (m.p1 === name || m.p2 === name))
-            .sort((a,b) => b.timestamp - a.timestamp).slice(0,5);
-        return matches.map(m => {
-            const isP1 = m.p1 === name;
-            const res = isP1 ? (m.g1 > m.g2 ? 'v' : m.g1 === m.g2 ? 'e' : 'd') : (m.g2 > m.g1 ? 'v' : m.g1 === m.g2 ? 'e' : 'd');
-            return `<span class="form-dot dot-${res}"></span>`;
-        }).join('');
     }
 
     function updateAdminPlayersList() {
