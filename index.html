@@ -21,6 +21,20 @@
         .form-dot { height: 8px; width: 8px; border-radius: 50%; display: inline-block; margin-right: 2px; }
         .dot-v { background: #00ff88; } .dot-e { background: #888; } .dot-d { background: #ff0055; }
 
+        /* ESTILO DOS ÚLTIMOS RESULTADOS (SCROLL HORIZONTAL) */
+        #recent-results::-webkit-scrollbar { display: none; }
+        .recent-match-item {
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            min-width: 130px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .recent-match-item .names { font-size: 9px; color: #888; margin-bottom: 4px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .recent-match-item .score { font-size: 14px; font-weight: 900; color: var(--primary); }
+
         .player-group { margin-bottom: 10px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--card); }
         .player-header { width: 100%; padding: 15px; background: none; border: none; color: #fff; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 800; font-size: 14px; }
         .player-content { display: none; padding: 10px; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border); }
@@ -29,7 +43,6 @@
         .t1-label { background: rgba(0, 255, 136, 0.1); color: var(--primary); border: 1px solid rgba(0,255,136,0.2); }
         .t2-label { background: rgba(255, 170, 0, 0.1); color: var(--gold); border: 1px solid rgba(255,170,0,0.2); }
         
-        /* ESPAÇAMENTO ENTRE RODADAS */
         .rodada-separator { margin-top: 25px; margin-bottom: 10px; padding-left: 5px; border-left: 3px solid var(--primary); color: #fff; font-size: 11px; font-weight: 800; text-transform: uppercase; }
 
         .match-card { background: #0a0d12; border-radius: 8px; padding: 12px; border: 1px solid #1a1f26; margin-bottom: 8px; }
@@ -60,6 +73,15 @@
                 </thead>
                 <tbody></tbody>
             </table>
+        </div>
+    </div>
+
+    <div class="leaderboard-card" style="margin-top: -15px;">
+        <div style="font-size: 10px; color: var(--primary); font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 5px;">
+            <i class="fas fa-history"></i> ÚLTIMOS PLACARES ADICIONADOS
+        </div>
+        <div id="recent-results" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none;">
+            <p style="font-size:10px; color:#555;">Carregando resultados...</p>
         </div>
     </div>
 
@@ -141,6 +163,7 @@
     onSnapshot(collection(db, "partidas"), (snap) => {
         allMatches = snap.docs.map(d => ({id: d.id, ...d.data()}));
         renderMatchesByPlayer();
+        renderRecentResults(); // NOVA CHAMADA
     });
 
     function renderLeaderboard() {
@@ -152,6 +175,26 @@
                 <td>${p.v}</td><td>${p.e}</td><td>${p.d}</td><td>${p.sg}</td>
                 <td>${getFormDots(p.nome)}</td>
             </tr>`).join('');
+    }
+
+    function renderRecentResults() {
+        const container = document.getElementById("recent-results");
+        const recent = allMatches
+            .filter(m => m.status === 'done')
+            .sort((a, b) => b.timestamp - a.timestamp)
+            .slice(0, 10);
+
+        if (recent.length === 0) {
+            container.innerHTML = '<p style="font-size:10px; color:#555;">Nenhum jogo finalizado.</p>';
+            return;
+        }
+
+        container.innerHTML = recent.map(m => `
+            <div class="recent-match-item">
+                <span class="names">${m.p1} x ${m.p2}</span>
+                <div class="score">${m.g1} - ${m.g2}</div>
+            </div>
+        `).join('');
     }
 
     function getFormDots(name) {
@@ -326,4 +369,3 @@
 </script>
 </body>
 </html>
-
