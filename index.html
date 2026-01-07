@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EFOOTBALL LEAGUE</title>
+    <title>EFOOTBALL LEAGUE - OFICIAL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #00ff88; --bg: #05070a; --card: #12161d; --text: #e0e0e0; --accent: #ff0055; --border: #232931; --gold: #ffaa00; }
@@ -12,42 +12,44 @@
         .container { max-width: 800px; margin: auto; padding: 15px; }
         header { text-align: center; padding: 25px 0; background: linear-gradient(to bottom, #12161d, var(--bg)); border-bottom: 1px solid var(--border); }
         
+        /* Tabela */
         .leaderboard-card { background: var(--card); border-radius: 16px; padding: 15px; margin-bottom: 25px; border: 1px solid var(--border); }
         .table-wrapper { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        th { text-align: left; color: #888; padding: 10px; border-bottom: 1px solid var(--border); font-size: 10px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { text-align: left; color: #888; padding: 10px; border-bottom: 1px solid var(--border); font-size: 10px; text-transform: uppercase; }
         td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .pts-bold { color: var(--primary); font-weight: 800; }
+        .pts-bold { color: var(--primary); font-weight: 900; }
 
+        /* Match Card */
+        .match-card { background: #0a0d12; border-radius: 10px; padding: 12px; border: 1px solid #1a1f26; margin-bottom: 8px; }
+        .score-box { background: #000; padding: 6px 14px; border-radius: 6px; font-weight: 900; color: #fff; min-width: 60px; text-align: center; border: 1px solid #222; font-size: 16px; margin: 0 10px; }
+        
+        .mando-label { font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 800; text-transform: uppercase; margin: 0 5px; }
+        .casa { background: rgba(0, 255, 136, 0.1); color: var(--primary); border: 1px solid rgba(0, 255, 136, 0.3); }
+        .fora { background: rgba(255, 255, 255, 0.05); color: #888; border: 1px solid #444; }
+
+        /* Accordion */
         .player-group { margin-bottom: 10px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--card); }
-        .player-header { width: 100%; padding: 15px; background: none; border: none; color: #fff; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 800; }
-        .player-header i { transition: transform 0.3s; color: var(--primary); }
+        .player-header { width: 100%; padding: 18px; background: none; border: none; color: #fff; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 800; font-size: 14px; }
         .player-content { display: none; padding: 10px; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border); }
 
-        .turno-header { font-size: 11px; font-weight: 900; padding: 8px 15px; border-radius: 6px; margin: 15px 0 10px 0; display: block; text-align: center; letter-spacing: 1px; }
-        .turno-1 { background: rgba(0, 255, 136, 0.1); color: var(--primary); border: 1px solid rgba(0, 255, 136, 0.3); }
-        .turno-2 { background: rgba(255, 170, 0, 0.1); color: var(--gold); border: 1px solid rgba(255, 170, 0, 0.3); }
+        .turno-title { font-size: 11px; font-weight: 900; padding: 8px; border-radius: 6px; margin: 15px 0 10px 0; text-align: center; letter-spacing: 1px; }
+        .t1-bg { background: rgba(0, 255, 136, 0.05); color: var(--primary); }
+        .t2-bg { background: rgba(255, 170, 0, 0.05); color: var(--gold); }
 
-        .match-card { background: #0a0d12; border-radius: 10px; padding: 12px; border: 1px solid #1a1f26; margin-bottom: 8px; }
-        .score-box { background: #000; padding: 5px 12px; border-radius: 6px; font-weight: 900; color: #fff; min-width: 55px; text-align: center; border: 1px solid #222; font-size: 15px; }
-        
-        /* Badge Casa/Fora */
-        .badge { font-size: 8px; padding: 2px 4px; border-radius: 3px; margin-left: 5px; vertical-align: middle; }
-        .badge-home { background: #333; color: #fff; }
-        .badge-away { background: #444; color: #aaa; }
-
+        /* Admin */
         #admin-panel { background: #0a0d12; padding: 15px; border-radius: 15px; border: 1px solid var(--primary); margin: 15px 0; display: none; }
-        .admin-item { display: flex; justify-content: space-between; padding: 8px; background: #161b22; border-radius: 8px; margin-bottom: 5px; border: 1px solid #232931; font-size: 12px; }
-        .btn-action { background: var(--primary); color: #000; border-radius: 8px; padding: 12px; width: 100%; font-weight: 800; cursor: pointer; border: none; }
-        .search-box { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; color: #fff; margin-bottom: 20px; outline: none; }
-        .btn-config { position: fixed; bottom: 15px; right: 15px; opacity: 0.2; background: none; border: none; color: #fff; }
-        #admin-auth { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 9999; }
+        .btn-action { background: var(--primary); color: #000; border-radius: 8px; padding: 14px; width: 100%; font-weight: 800; cursor: pointer; border: none; transition: 0.2s; }
+        .btn-action:active { transform: scale(0.98); }
+        .search-box { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 15px; color: #fff; margin-bottom: 20px; outline: none; }
+        .btn-config { position: fixed; bottom: 15px; right: 15px; opacity: 0.4; background: none; border: none; color: #fff; font-size: 22px; }
+        #admin-auth { position: fixed; inset: 0; background: rgba(0,0,0,0.96); display: none; align-items: center; justify-content: center; z-index: 9999; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>EFOOTBALL CAMPEONATO <span style="background:var(--accent); font-size:9px; padding:2px 5px; border-radius:3px;">LIVE</span></h1>
+    <h1>EFOOTBALL LEAGUE <span style="background:var(--accent); font-size:10px; padding:2px 6px; border-radius:4px; margin-left:5px;">PRO</span></h1>
 </header>
 
 <div class="container">
@@ -63,16 +65,15 @@
     </div>
 
     <div id="admin-panel">
-        <div id="admin-players-list" style="margin-bottom:15px;"></div>
-        <input type="text" id="new-player-name" placeholder="Nome do Jogador" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:#fff; border-radius:8px;">
-        <button onclick="addPlayer()" class="btn-action" style="margin-top:10px;">CADASTRAR</button>
+        <input type="text" id="new-player-name" placeholder="Nome do Competidor" style="width:100%; padding:12px; background:#000; border:1px solid #333; color:#fff; border-radius:8px; margin-bottom:10px;">
+        <button onclick="addPlayer()" class="btn-action">CADASTRAR JOGADOR</button>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
-            <button onclick="sortearTorneio()" class="btn-action" style="background:var(--gold)">GERAR JOGOS</button>
+            <button onclick="sortearTorneio()" class="btn-action" style="background:var(--gold)">GERAR IDA/VOLTA</button>
             <button onclick="resetarJogos()" class="btn-action" style="background:#444; color:#fff;">RESETAR TUDO</button>
         </div>
     </div>
 
-    <input type="text" id="search-input" class="search-box" placeholder="Buscar jogador..." onkeyup="renderMatchesByPlayer()">
+    <input type="text" id="search-input" class="search-box" placeholder="Procurar jogador..." onkeyup="renderMatchesByPlayer()">
 
     <div id="matches-by-player"></div>
 </div>
@@ -80,8 +81,9 @@
 <button class="btn-config" onclick="showAuth()"><i class="fas fa-cog"></i></button>
 
 <div id="admin-auth">
-    <div style="background:#0a0d12; padding:30px; border-radius:15px; border:1px solid var(--border); text-align:center;">
-        <input type="password" id="admin-pass" placeholder="PIN" style="background:none; border:none; border-bottom:2px solid var(--primary); color:#fff; font-size:24px; width:80px; text-align:center; outline:none;">
+    <div style="background:#12161d; padding:40px; border-radius:20px; border:1px solid var(--border); text-align:center; width: 80%; max-width: 300px;">
+        <h3 style="margin-top:0">ACESSO ADMIN</h3>
+        <input type="password" id="admin-pass" placeholder="PIN" style="background:#000; border:1px solid var(--primary); color:#fff; font-size:24px; width:100%; text-align:center; outline:none; padding: 10px; border-radius: 8px;">
         <br><br>
         <button onclick="checkAuth()" class="btn-action">ENTRAR</button>
     </div>
@@ -109,39 +111,17 @@
     window.showAuth = () => document.getElementById('admin-auth').style.display = 'flex';
     window.checkAuth = () => {
         if(document.getElementById('admin-pass').value === "9498") {
-            isAdmin = true; document.getElementById('admin-panel').style.display = 'block';
+            isAdmin = true; 
+            document.getElementById('admin-panel').style.display = 'block';
             document.getElementById('admin-auth').style.display = 'none';
-            renderAdminList(); renderMatchesByPlayer();
-        } else alert("Incorreto");
-    };
-
-    window.editPlayer = async (id, old) => { const n = prompt("Novo nome:", old); if(n) await updateDoc(doc(db, "jogadores", id), { nome: n }); };
-    window.removePlayer = async (id) => { if(confirm("Remover?")) await deleteDoc(doc(db, "jogadores", id)); };
-
-    const renderAdminList = () => {
-        document.getElementById("admin-players-list").innerHTML = globalPlayers.map(p => `
-            <div class="admin-item">
-                <span>${p.nome}</span>
-                <div>
-                    <button onclick="editPlayer('${p.id}', '${p.nome}')" style="background:none; border:none; color:var(--primary); margin-right:10px;"><i class="fas fa-edit"></i></button>
-                    <button onclick="removePlayer('${p.id}')" style="background:none; border:none; color:var(--accent);"><i class="fas fa-trash"></i></button>
-                </div>
-            </div>`).join('');
-    };
-
-    window.togglePlayer = (id) => {
-        const c = document.getElementById(`content-${id}`);
-        const i = document.getElementById(`icon-${id}`);
-        const isOpen = c.style.display === 'block';
-        c.style.display = isOpen ? 'none' : 'block';
-        i.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+            renderMatchesByPlayer();
+        } else alert("PIN Incorreto");
     };
 
     onSnapshot(collection(db, "jogadores"), (snap) => {
-        globalPlayers = [];
-        snap.forEach(d => globalPlayers.push({ id: d.id, ...d.data() }));
-        // Ordenação: Pontos -> Vitórias -> Saldo de Gols
+        globalPlayers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         globalPlayers.sort((a,b) => b.pts - a.pts || b.v - a.v || b.sg - a.sg);
+        
         document.querySelector("#leaderboard tbody").innerHTML = globalPlayers.map((p, i) => `
             <tr>
                 <td style="color:var(--primary); font-weight:900;">${i+1}º</td>
@@ -149,47 +129,105 @@
                 <td class="pts-bold">${p.pts}</td>
                 <td>${p.v}</td><td>${p.e}</td><td>${p.d}</td><td>${p.sg}</td>
             </tr>`).join('');
-        if(isAdmin) renderAdminList();
-        renderMatchesByPlayer();
     });
 
     onSnapshot(collection(db, "partidas"), (snap) => {
-        allMatches = [];
-        snap.forEach(d => allMatches.push({id: d.id, ...d.data()}));
+        allMatches = snap.docs.map(d => ({id: d.id, ...d.data()}));
         renderMatchesByPlayer();
     });
+
+    window.salvarPlacar = async (matchId) => {
+        const g1 = parseInt(document.getElementById(`i1-${matchId}`).value) || 0;
+        const g2 = parseInt(document.getElementById(`i2-${matchId}`).value) || 0;
+
+        // 1. Marcar partida como finalizada
+        await updateDoc(doc(db, "partidas", matchId), { g1, g2, status: 'done' });
+
+        // 2. Recalcular toda a classificação (Lógica de 3 pts para Vitória)
+        const pSnap = await getDocs(collection(db, "jogadores"));
+        const mSnap = await getDocs(collection(db, "partidas"));
+        const batch = writeBatch(db);
+
+        pSnap.forEach(pDoc => {
+            const playerNome = pDoc.data().nome;
+            let p = 0, v = 0, e = 0, d = 0, sg = 0;
+
+            mSnap.forEach(mDoc => {
+                const m = mDoc.data();
+                if (m.status !== 'done') return;
+
+                if (m.p1 === playerNome) {
+                    sg += (m.g1 - m.g2);
+                    if (m.g1 > m.g2) { p += 3; v++; }
+                    else if (m.g1 === m.g2) { p += 1; e++; }
+                    else { d++; }
+                } 
+                else if (m.p2 === playerNome) {
+                    sg += (m.g2 - m.g1);
+                    if (m.g2 > m.g1) { p += 3; v++; }
+                    else if (m.g1 === m.g2) { p += 1; e++; }
+                    else { d++; }
+                }
+            });
+            batch.update(pDoc.ref, { pts: p, v: v, e: e, d: d, sg: sg });
+        });
+
+        await batch.commit();
+    };
+
+    window.sortearTorneio = async () => {
+        if(globalPlayers.length < 2) return alert("Mínimo 2 jogadores!");
+        const batch = writeBatch(db);
+        
+        // Limpa placares antigos dos jogadores
+        globalPlayers.forEach(p => batch.update(doc(db, "jogadores", p.id), { pts:0, v:0, e:0, d:0, sg:0 }));
+        
+        for(let i=0; i<globalPlayers.length; i++) {
+            for(let j=i+1; j<globalPlayers.length; j++) {
+                // IDA: Jogador i joga em casa
+                batch.set(doc(collection(db, "partidas")), { 
+                    p1: globalPlayers[i].nome, p2: globalPlayers[j].nome, 
+                    g1: 0, g2: 0, status: 'open', turno: 1 
+                });
+                // VOLTA: Jogador j joga em casa
+                batch.set(doc(collection(db, "partidas")), { 
+                    p1: globalPlayers[j].nome, p2: globalPlayers[i].nome, 
+                    g1: 0, g2: 0, status: 'open', turno: 2 
+                });
+            }
+        }
+        await batch.commit();
+        alert("Jogos gerados!");
+    };
 
     window.renderMatchesByPlayer = () => {
         const container = document.getElementById("matches-by-player");
         const search = document.getElementById("search-input").value.toLowerCase();
-        let players = globalPlayers.filter(p => p.nome.toLowerCase().includes(search));
+        let filteredPlayers = globalPlayers.filter(p => p.nome.toLowerCase().includes(search));
         
-        container.innerHTML = players.map(player => {
+        container.innerHTML = filteredPlayers.map(player => {
             const matches = allMatches.filter(m => m.p1 === player.nome || m.p2 === player.nome);
             const t1 = matches.filter(m => m.turno === 1);
             const t2 = matches.filter(m => m.turno === 2);
 
             const matchHtml = (m) => {
                 const isHome = m.p1 === player.nome;
-                const opponent = isHome ? m.p2 : m.p1;
-                const roleBadge = isHome ? '<span class="badge badge-home">CASA</span>' : '<span class="badge badge-away">FORA</span>';
-                
                 return `
                 <div class="match-card">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div style="flex:1; font-weight:700; color:${isHome ? 'var(--primary)' : '#fff'}">
-                            ${m.p1} ${m.p1 === player.nome ? roleBadge : ''}
+                        <div style="flex:1; color:${isHome ? 'var(--primary)' : '#fff'}; font-weight:700; font-size:13px;">
+                            ${m.p1} ${isHome ? '<span class="mando-label casa">CASA</span>' : ''}
                         </div>
                         <div class="score-box">${m.status === 'done' ? `${m.g1} - ${m.g2}` : 'VS'}</div>
-                        <div style="flex:1; text-align:right; font-weight:700; color:${!isHome ? 'var(--primary)' : '#fff'}">
-                            ${m.p2 === player.nome ? roleBadge : ''} ${m.p2}
+                        <div style="flex:1; text-align:right; color:${!isHome ? 'var(--primary)' : '#fff'}; font-weight:700; font-size:13px;">
+                            ${!isHome ? '<span class="mando-label fora">FORA</span>' : ''} ${m.p2}
                         </div>
                     </div>
                     ${isAdmin ? `
-                        <div style="display:flex; gap:8px; justify-content:center; margin-top:10px; border-top:1px solid #222; padding-top:10px;">
-                            <input type="number" id="i1-${m.id}" value="${m.g1}" style="width:40px; background:#000; border:1px solid #444; color:#fff; text-align:center;">
-                            <input type="number" id="i2-${m.id}" value="${m.g2}" style="width:40px; background:#000; border:1px solid #444; color:#fff; text-align:center;">
-                            <button onclick="salvarPlacar('${m.id}')" style="background:var(--primary); border:none; border-radius:4px; padding:4px 12px; font-weight:900; font-size:11px;">SALVAR</button>
+                        <div style="display:flex; gap:8px; justify-content:center; margin-top:12px; border-top:1px solid #222; padding-top:10px;">
+                            <input type="number" id="i1-${m.id}" value="${m.g1}" style="width:45px; background:#000; border:1px solid #444; color:#fff; text-align:center; border-radius:4px;">
+                            <input type="number" id="i2-${m.id}" value="${m.g2}" style="width:45px; background:#000; border:1px solid #444; color:#fff; text-align:center; border-radius:4px;">
+                            <button onclick="salvarPlacar('${m.id}')" style="background:var(--primary); border:none; border-radius:4px; padding:6px 15px; font-weight:900; font-size:10px;">SALVAR</button>
                         </div>` : ''}
                 </div>`;
             };
@@ -198,92 +236,38 @@
                 <div class="player-group">
                     <button class="player-header" onclick="togglePlayer('${player.id}')">
                         <span>${player.nome.toUpperCase()}</span>
-                        <i class="fas fa-chevron-down" id="icon-${player.id}"></i>
+                        <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="player-content" id="content-${player.id}">
-                        <div class="turno-header turno-1">1º TURNO (IDA)</div>
+                        <div class="turno-title t1-bg">IDA (1º TURNO)</div>
                         ${t1.map(m => matchHtml(m)).join('')}
-                        <div class="turno-header turno-2">2º TURNO (VOLTA)</div>
+                        <div class="turno-title t2-bg">VOLTA (2º TURNO)</div>
                         ${t2.map(m => matchHtml(m)).join('')}
                     </div>
                 </div>`;
         }).join('');
     };
 
+    window.togglePlayer = (id) => {
+        const c = document.getElementById(`content-${id}`);
+        c.style.display = c.style.display === 'block' ? 'none' : 'block';
+    };
+
     window.addPlayer = async () => {
         const n = document.getElementById("new-player-name").value.trim();
         if(n) await addDoc(collection(db, "jogadores"), { nome: n, pts:0, v:0, e:0, d:0, sg:0 });
         document.getElementById("new-player-name").value = "";
-    }; 
-
-    window.sortearTorneio = async () => {
-        if(globalPlayers.length < 2) return alert("Mínimo 2 jogadores");
-        const batch = writeBatch(db);
-        
-        // Evita duplicação limpando partidas antigas antes de gerar novas (opcional, mas seguro)
-        for(let i=0; i<globalPlayers.length; i++) {
-            for(let j=i+1; j<globalPlayers.length; j++) {
-                // IDA: Jogador A vs Jogador B
-                batch.set(doc(collection(db, "partidas")), { 
-                    p1:globalPlayers[i].nome, p2:globalPlayers[j].nome, 
-                    g1:0, g2:0, status:'open', turno:1, timestamp: Date.now() 
-                });
-                // VOLTA: Jogador B vs Jogador A (Inverte mando)
-                batch.set(doc(collection(db, "partidas")), { 
-                    p1:globalPlayers[j].nome, p2:globalPlayers[i].nome, 
-                    g1:0, g2:0, status:'open', turno:2, timestamp: Date.now() 
-                });
-            }
-        }
-        await batch.commit();
-        alert("Jogos de Ida e Volta gerados!");
-    };
-
-    window.salvarPlacar = async (id) => {
-        const g1 = parseInt(document.getElementById(`i1-${id}`).value) || 0;
-        const g2 = parseInt(document.getElementById(`i2-${id}`).value) || 0;
-        
-        await updateDoc(doc(db, "partidas", id), { g1, g2, status: 'done', timestamp: Date.now() });
-        
-        // Recalcular Tabela Inteira para garantir integridade do Saldo de Gols
-        const pSnap = await getDocs(collection(db, "jogadores"));
-        const mSnap = await getDocs(collection(db, "partidas"));
-        const batch = writeBatch(db);
-        
-        pSnap.forEach(pDoc => {
-            const n = pDoc.data().nome;
-            let st = { pts:0, v:0, e:0, d:0, sg:0 };
-            
-            mSnap.forEach(mDoc => {
-                const m = mDoc.data(); 
-                if(m.status !== 'done') return;
-                
-                if(m.p1 === n) { 
-                    st.sg += (m.g1 - m.g2); 
-                    if(m.g1 > m.g2) { st.pts += 3; st.v++; } 
-                    else if(m.g1 === m.g2) { st.pts += 1; st.e++; } 
-                    else st.d++; 
-                }
-                else if(m.p2 === n) { 
-                    st.sg += (m.g2 - m.g1); 
-                    if(m.g2 > m.g1) { st.pts += 3; st.v++; } 
-                    else if(m.g1 === m.g2) { st.pts += 1; st.e++; } 
-                    else st.d++; 
-                }
-            });
-            batch.update(pDoc.ref, st);
-        });
-        await batch.commit();
     };
 
     window.resetarJogos = async () => {
-        if(!confirm("Isso apagará todas as partidas e zerar a tabela. Confirmar?")) return;
+        if(!confirm("Resetar campeonato?")) return;
         const m = await getDocs(collection(db, "partidas"));
         const p = await getDocs(collection(db, "jogadores"));
         const batch = writeBatch(db);
         m.forEach(d => batch.delete(d.ref));
         p.forEach(d => batch.update(d.ref, { pts:0, v:0, e:0, d:0, sg:0 }));
         await batch.commit();
+        alert("Tudo limpo!");
     };
 </script>
 </body>
