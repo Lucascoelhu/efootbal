@@ -382,24 +382,48 @@
     }
 
     window.shareResultsWhatsApp = () => {
-        let t = "*🏆 EFOOTBALL - RODADAS*\n\n";
-        const groups = {};
-        allMatches.forEach(m => {
-            const l = `RODADA ${m.rodada}`;
-            if(!groups[l]) groups[l] = [];
-            groups[l].push(m);
-        });
-        Object.keys(groups).sort().forEach(l => {
-            t += `*${l}*\n`;
-            groups[l].forEach(m => { t += `▫️ ${m.p1} ${m.status==='done' ? m.g1+'x'+m.g2 : 'VS'} ${m.p2}\n`; });
-            t += "\n";
-        });
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`);
-    };
+        // 1. Coleta as rodadas existentes
+        const rodadasExistentes = [...new Set(allMatches.map(m => m.rodada))].sort((a, b) => a - b);
+        
+        if (rodadasExistentes.length === 0) {
+            alert("Nenhuma rodada encontrada.");
+            return;
+        }
 
-    window.shareTableWhatsApp = () => {
-        let t = "*📊 CLASSIFICAÇÃO ATUAL*\n\n";
-        globalPlayers.forEach((p, i) => { t += `${i+1}º ${p.nome.toUpperCase()}: ${p.pts}pts (${p.v}V | SG:${p.sg})\n`; });
+        // 2. Pergunta qual rodada o usuário quer compartilhar
+        const escolha = prompt(`Digite o número da rodada que deseja compartilhar:\n(Opções: ${rodadasExistentes.join(", ")})`, rodadasExistentes[0]);
+
+        if (escolha === null || escolha === "") return;
+
+        const numRodada = parseInt(escolha);
+        const partidasDaRodada = allMatches.filter(m => m.rodada === numRodada);
+
+        if (partidasDaRodada.length === 0) {
+            alert("Rodada inválida.");
+            return;
+        }
+
+        // 3. Monta o texto formatado
+        let t = `*🏆 EFOOTBALL - RODADA ${numRodada}*\n`;
+        t += "━━━━━━━━━━━━━━━━━━━━\n\n";
+
+        // Organiza por Turno (Ida/Volta)
+        [1, 2].forEach(turno => {
+            const jogos = partidasDaRodada.filter(m => m.turno === turno);
+            if (jogos.length > 0) {
+                t += `*${turno === 1 ? '➡ IDA' : '⬅ VOLTA'}*\n`;
+                jogos.forEach(m => {
+                    const statusIcon = m.status === 'done' ? "✅" : "⏳";
+                    const placar = m.status === 'done' ? `*${m.g1}* x *${m.g2}*` : " vs ";
+                    t += `${statusIcon} ${m.p1} ${placar} ${m.p2}\n`;
+                });
+                t += "\n";
+            }
+        });
+
+        t += "━━━━━━━━━━━━━━━━━━━━";
+        
+        // 4. Abre o link do WhatsApp
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`);
     };
 </script>
