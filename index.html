@@ -31,21 +31,44 @@
         .rodada-group { min-width: 280px; background: var(--card); border-radius: 10px; padding: 12px; border: 1px solid var(--border); scroll-snap-align: start; flex-shrink: 0; }
         .rodada-label { font-size: 10px; color: var(--gold); font-weight: 900; margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 5px; text-align: center; }
         
-        /* MATCH ITEM ESTILO ORIGINAL */
+        /* MATCH ITEM GLOBAL */
         .match-item { display: flex; align-items: center; justify-content: space-between; background: #000; margin-bottom: 6px; padding: 8px 12px; border-radius: 6px; border: 1px solid #1a1f26; }
         .match-item .p-name { font-size: 10px; flex: 1; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .match-item .p-score { background: var(--primary); color: #000; font-weight: 900; padding: 2px 8px; border-radius: 4px; min-width: 45px; text-align: center; margin: 0 8px; cursor: pointer; }
         .match-item .p-score.open { background: #333; color: #777; font-size: 9px; }
 
+        /* ESTILO AMPLIPICADO PARA CONFRONTOS POR JOGADOR */
+        #matches-by-player .player-header { 
+            padding: 16px; 
+            font-size: 14px; 
+            letter-spacing: 1px; 
+            border-left: 4px solid var(--primary); 
+            margin-bottom: 8px;
+            background: #1a1f26;
+            color: #fff;
+            width: 100%;
+            border-top: none; border-right: none; border-bottom: none;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer;
+        }
+
+        #matches-by-player .match-item {
+            padding: 15px 12px; 
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        #matches-by-player .p-name { font-size: 12px; font-weight: 700; }
+        #matches-by-player .p-score { font-size: 14px; padding: 6px 14px; min-width: 60px; }
+
         /* BADGES CASA/FORA */
-        .mando-badge { font-size: 7px; padding: 1px 4px; border-radius: 3px; font-weight: 900; margin: 0 4px; text-transform: uppercase; }
+        .mando-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin: 0 4px; text-transform: uppercase; }
         .casa { background: #333; color: var(--primary); }
         .fora { background: #222; color: #aaa; }
 
-        /* CONFRONTOS POR JOGADOR */
-        .player-header { width: 100%; padding: 12px; background: #1a1f26; border: none; color: #fff; border-radius: 6px; display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; cursor: pointer; margin-bottom: 5px; }
-        .player-content { display: none; padding: 10px; border: 1px solid #1a1f26; border-top: none; background: rgba(0,0,0,0.2); margin-bottom: 10px; }
-        .turno-header { background: #1e242d; color: var(--gold); padding: 5px 10px; font-size: 10px; font-weight: 900; margin: 15px 0 10px; border-radius: 4px; border-left: 3px solid var(--gold); }
+        .player-content { display: none; padding: 10px; border: 1px solid #1a1f26; border-top: none; background: rgba(0,0,0,0.3); margin-bottom: 15px; border-radius: 0 0 8px 8px; }
+        .turno-header { background: #1e242d; color: var(--gold); padding: 8px 12px; font-size: 11px; font-weight: 900; margin: 15px 0 10px; border-radius: 4px; border-left: 3px solid var(--gold); }
 
         /* MODAIS */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }
@@ -87,7 +110,7 @@
     </button>
     
     <div id="confrontos-content" style="display:none; margin-top:15px;">
-        <input type="text" id="search-input" style="width:100%; padding:12px; background:#000; border:1px solid #333; color:#fff; border-radius:8px; margin-bottom:15px;" placeholder="Filtrar por nome..." onkeyup="renderMatchesByPlayer()">
+        <input type="text" id="search-input" style="width:100%; padding:14px; background:#000; border:1px solid #333; color:#fff; border-radius:8px; margin-bottom:15px;" placeholder="Filtrar por nome..." onkeyup="renderMatchesByPlayer()">
         <div id="matches-by-player"></div>
     </div>
 
@@ -235,8 +258,8 @@
             const mVolta = pMatches.filter(m => m.turno === 2).sort((a,b) => a.rodada - b.rodada);
 
             const renderM = (m) => `
-                <div style="font-size:8px; color:#666; margin: 8px 0 2px; font-weight:800;">RODADA ${m.rodada}</div>
-                <div class="match-item" style="background:rgba(255,255,255,0.02); border:none; padding:5px 10px;">
+                <div style="font-size:9px; color:#777; margin: 12px 0 4px; font-weight:800; padding-left:5px;">RODADA ${m.rodada}</div>
+                <div class="match-item">
                     <div class="p-name" style="text-align:right; color:${m.p1 === player.nome ? 'var(--primary)' : '#fff'}">
                         ${m.p1} <span class="mando-badge casa">CASA</span>
                     </div>
@@ -253,9 +276,9 @@
                     ${player.nome.toUpperCase()} <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="player-content" id="c-${player.id}">
-                    <div class="turno-header">IDA</div>
+                    <div class="turno-header">PRIMEIRO TURNO (IDA)</div>
                     ${mIda.map(renderM).join('')}
-                    <div class="turno-header">VOLTA</div>
+                    <div class="turno-header">SEGUNDO TURNO (VOLTA)</div>
                     ${mVolta.map(renderM).join('')}
                 </div>`;
         }).join('');
@@ -284,10 +307,10 @@
 
     window.updateAdminList = () => {
         document.getElementById("admin-players-list").innerHTML = globalPlayers.map(p => `
-            <div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #222; font-size:11px; align-items:center;">
+            <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #222; font-size:11px; align-items:center;">
                 <span>${p.nome}</span>
                 <div>
-                    <i class="fas fa-edit" style="color:var(--gold); margin-right:15px;" onclick="editPlayerName('${p.id}', '${p.nome}')"></i>
+                    <i class="fas fa-edit" style="color:var(--gold); margin-right:20px;" onclick="editPlayerName('${p.id}', '${p.nome}')"></i>
                     <i class="fas fa-trash" style="color:red;" onclick="deletePlayer('${p.id}')"></i>
                 </div>
             </div>
