@@ -78,7 +78,21 @@
 
         /* BOTÕES ADM */
         .btn-adm { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; font-size: 11px; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-config { position: fixed; bottom: 20px; left: 20px; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; opacity: 0.2; }
+        
+        /* ALTERAÇÃO: ENGRENAGEM NO LADO ESQUERDO E MAIS TRANSPARENTE */
+        .btn-config { 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            background: rgba(255,255,255,0.05); 
+            border: none; 
+            color: #fff; 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%; 
+            opacity: 0.1; 
+            z-index: 999;
+        }
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
@@ -382,32 +396,21 @@
     }
 
     window.shareResultsWhatsApp = () => {
-        // 1. Coleta as rodadas existentes
         const rodadasExistentes = [...new Set(allMatches.map(m => m.rodada))].sort((a, b) => a - b);
-        
         if (rodadasExistentes.length === 0) {
             alert("Nenhuma rodada encontrada.");
             return;
         }
-
-        // 2. Pergunta qual rodada o usuário quer compartilhar
         const escolha = prompt(`Digite o número da rodada que deseja compartilhar:\n(Opções: ${rodadasExistentes.join(", ")})`, rodadasExistentes[0]);
-
         if (escolha === null || escolha === "") return;
-
         const numRodada = parseInt(escolha);
         const partidasDaRodada = allMatches.filter(m => m.rodada === numRodada);
-
         if (partidasDaRodada.length === 0) {
             alert("Rodada inválida.");
             return;
         }
-
-        // 3. Monta o texto formatado
         let t = `*🏆 EFOOTBALL - RODADA ${numRodada}*\n`;
         t += "━━━━━━━━━━━━━━━━━━━━\n\n";
-
-        // Organiza por Turno (Ida/Volta)
         [1, 2].forEach(turno => {
             const jogos = partidasDaRodada.filter(m => m.turno === turno);
             if (jogos.length > 0) {
@@ -420,10 +423,13 @@
                 t += "\n";
             }
         });
-
         t += "━━━━━━━━━━━━━━━━━━━━";
-        
-        // 4. Abre o link do WhatsApp
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`);
+    };
+
+    window.shareTableWhatsApp = () => {
+        let t = "*📊 CLASSIFICAÇÃO ATUAL*\n\n";
+        globalPlayers.forEach((p, i) => { t += `${i+1}º ${p.nome.toUpperCase()}: ${p.pts}pts (${p.v}V | SG:${p.sg})\n`; });
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`);
     };
 </script>
