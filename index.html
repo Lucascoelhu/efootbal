@@ -25,44 +25,76 @@
 
         .section-title { font-size: 12px; font-weight: 900; color: var(--primary); margin: 20px 0 10px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; padding: 0 5px; }
         
+        /* ESTILO PROFISSIONAL DO TICKER */
+        .ticker-wrapper {
+            background: linear-gradient(90deg, rgba(0,255,136,0.05) 0%, rgba(5,7,10,1) 50%, rgba(0,255,136,0.05) 100%);
+            border-top: 1px solid rgba(0,255,136,0.2);
+            border-bottom: 1px solid rgba(0,255,136,0.2);
+            margin: 15px -12px;
+            padding: 12px 0;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .ticker-label {
+            position: absolute;
+            left: 0;
+            z-index: 10;
+            background: var(--primary);
+            color: #000;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 5px 15px;
+            text-transform: uppercase;
+            clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
+        }
+
+        .ticker-content {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+            animation: ticker-scroll 25s linear infinite;
+        }
+
+        .ticker-match {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            margin-right: 60px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .ticker-match .vs-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 9px;
+            color: var(--primary);
+        }
+
+        @keyframes ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
         /* RODADAS (SCROLL LATERAL) */
         .results-scroll-container { display: flex; overflow-x: auto; gap: 15px; padding: 5px 5px 15px; scroll-snap-type: x mandatory; scrollbar-width: none; }
         .results-scroll-container::-webkit-scrollbar { display: none; }
         .rodada-group { min-width: 280px; background: var(--card); border-radius: 10px; padding: 12px; border: 1px solid var(--border); scroll-snap-align: start; flex-shrink: 0; }
         .rodada-label { font-size: 10px; color: var(--gold); font-weight: 900; margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 5px; text-align: center; }
         
-        /* MATCH ITEM GLOBAL */
         .match-item { display: flex; align-items: center; justify-content: space-between; background: #000; margin-bottom: 6px; padding: 8px 12px; border-radius: 6px; border: 1px solid #1a1f26; }
         .match-item .p-name { font-size: 10px; flex: 1; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .match-item .p-score { background: var(--primary); color: #000; font-weight: 900; padding: 2px 8px; border-radius: 4px; min-width: 45px; text-align: center; margin: 0 8px; cursor: pointer; }
         .match-item .p-score.open { background: #333; color: #777; font-size: 9px; }
 
-        /* ESTILO AMPLIPICADO PARA CONFRONTOS POR JOGADOR */
-        #matches-by-player .player-header { 
-            padding: 16px; 
-            font-size: 14px; 
-            letter-spacing: 1px; 
-            border-left: 4px solid var(--primary); 
-            margin-bottom: 8px;
-            background: #1a1f26;
-            color: #fff;
-            width: 100%;
-            border-top: none; border-right: none; border-bottom: none;
-            display: flex; justify-content: space-between; align-items: center;
-            cursor: pointer;
-        }
+        #matches-by-player .player-header { padding: 16px; font-size: 14px; letter-spacing: 1px; border-left: 4px solid var(--primary); margin-bottom: 8px; background: #1a1f26; color: #fff; width: 100%; border-top: none; border-right: none; border-bottom: none; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        #matches-by-player .match-item { padding: 15px 12px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); }
 
-        #matches-by-player .match-item {
-            padding: 15px 12px; 
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        #matches-by-player .p-name { font-size: 12px; font-weight: 700; }
-        #matches-by-player .p-score { font-size: 14px; padding: 6px 14px; min-width: 60px; }
-
-        /* BADGES CASA/FORA */
         .mando-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin: 0 4px; text-transform: uppercase; }
         .casa { background: #333; color: var(--primary); }
         .fora { background: #222; color: #aaa; }
@@ -70,29 +102,13 @@
         .player-content { display: none; padding: 10px; border: 1px solid #1a1f26; border-top: none; background: rgba(0,0,0,0.3); margin-bottom: 15px; border-radius: 0 0 8px 8px; }
         .turno-header { background: #1e242d; color: var(--gold); padding: 8px 12px; font-size: 11px; font-weight: 900; margin: 15px 0 10px; border-radius: 4px; border-left: 3px solid var(--gold); }
 
-        /* MODAIS */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }
         .modal-content { background: var(--card); border: 1px solid var(--primary); width: 100%; max-width: 350px; border-radius: 15px; padding: 25px; text-align: center; }
         .score-input-wrap { display: flex; justify-content: center; align-items: center; gap: 15px; margin: 20px 0; }
         .score-input-wrap input { width: 65px; height: 65px; background: #000; border: 2px solid #333; color: var(--primary); font-size: 30px; font-weight: 900; text-align: center; border-radius: 10px; }
 
-        /* BOTÕES ADM */
         .btn-adm { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; font-size: 11px; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        
-        /* ALTERAÇÃO: ENGRENAGEM NO LADO ESQUERDO E MAIS TRANSPARENTE */
-        .btn-config { 
-            position: fixed; 
-            bottom: 20px; 
-            right: 20px; 
-            background: rgba(255,255,255,0.05); 
-            border: none; 
-            color: #fff; 
-            width: 40px; 
-            height: 40px; 
-            border-radius: 50%; 
-            opacity: 0.1; 
-            z-index: 999;
-        }
+        .btn-config { position: fixed; bottom: 20px; right: 20px; background: rgba(255,255,255,0.05); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; opacity: 0.1; z-index: 999; }
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
@@ -117,6 +133,7 @@
     </div>
 
     <div class="section-title"><i class="fas fa-running"></i> Rodadas em Andamento</div>
+    
     <div id="results-by-round" class="results-scroll-container"></div>
 
     <button class="btn-adm" style="background: var(--card); color: var(--primary); border: 1px solid var(--border); font-size: 13px; padding:15px;" onclick="toggleConfrontos()">
@@ -200,6 +217,7 @@
             isAdmin = true;
             document.getElementById('admin-panel').style.display = 'block';
             document.getElementById('admin-auth').style.display = 'none';
+            renderResultsByRound(); // Atualiza para liberar cliques admin
         } else alert("PIN Incorreto");
     };
 
@@ -231,74 +249,80 @@
             </tr>`).join('');
     }
 
-    /* --- Substitua ou adicione estas funções no seu <script> --- */
+    // --- NOVA LOGICA DO TICKER E RODADAS ---
+    function renderLiveTicker(groups, sortedLabels) {
+        const oldTicker = document.getElementById('live-ticker-container');
+        if(oldTicker) oldTicker.remove();
 
-function renderResultsByRound() {
-    const container = document.getElementById("results-by-round");
-    if(allMatches.length === 0) return;
-    
-    const groups = {};
-    allMatches.forEach(m => {
-        const label = `RODADA ${m.rodada} (${m.turno === 1 ? 'IDA' : 'VOLTA'})`;
-        if(!groups[label]) groups[label] = { turno: m.turno, rodada: m.rodada, games: [], hasStarted: false };
-        groups[label].games.push(m);
-        if(m.status === 'done') groups[label].hasStarted = true;
-    });
+        // Encontra a primeira rodada que ainda tem jogos pendentes ('open')
+        const currentLabel = sortedLabels.find(l => groups[l].games.some(g => g.status === 'open'));
+        if(!currentLabel) return;
 
-    const sortedLabels = Object.keys(groups).sort((a,b) => groups[a].turno - groups[b].turno || groups[a].rodada - groups[b].rodada);
-    
-    // Filtra para mostrar o Ticker da rodada atual (a primeira que tem jogos 'open')
-    renderLiveTicker(groups, sortedLabels);
+        const pendingMatches = groups[currentLabel].games.filter(g => g.status === 'open');
+        if(pendingMatches.length === 0) return;
 
-    const active = sortedLabels.filter(l => groups[l].hasStarted || isAdmin);
-
-    container.innerHTML = active.map(label => `
-        <div class="rodada-group">
-            <div class="rodada-label">${label}</div>
-            ${groups[label].games.map(m => `
-                <div class="match-item">
-                    <span class="p-name" style="text-align:right">${m.p1}</span>
-                    <span class="p-score ${m.status !== 'done' ? 'open' : ''}" onclick="${isAdmin ? `openScoreModal('${m.id}')` : ''}">
-                        ${m.status === 'done' ? `${m.g1} - ${m.g2}` : 'VS'}
-                    </span>
-                    <span class="p-name" style="text-align:left">${m.p2}</span>
+        const tickerHtml = `
+            <div id="live-ticker-container" class="ticker-wrapper">
+                <div class="ticker-label">Próximos</div>
+                <div class="ticker-content">
+                    ${pendingMatches.map(m => `
+                        <div class="ticker-match">
+                            <span style="opacity: 0.5; font-size: 9px;">${currentLabel}</span>
+                            <span>${m.p1.toUpperCase()}</span>
+                            <span class="vs-badge">VS</span>
+                            <span>${m.p2.toUpperCase()}</span>
+                            <span style="color:var(--primary); margin: 0 20px;">•</span>
+                        </div>
+                    `).join('')}
+                    ${pendingMatches.map(m => `
+                        <div class="ticker-match">
+                            <span style="opacity: 0.5; font-size: 9px;">${currentLabel}</span>
+                            <span>${m.p1.toUpperCase()}</span>
+                            <span class="vs-badge">VS</span>
+                            <span>${m.p2.toUpperCase()}</span>
+                            <span style="color:var(--primary); margin: 0 20px;">•</span>
+                        </div>
+                    `).join('')}
                 </div>
-            `).join('')}
-        </div>
-    `).join('');
-}
+            </div>
+        `;
+        document.getElementById("results-by-round").insertAdjacentHTML('beforebegin', tickerHtml);
+    }
 
-function renderLiveTicker(groups, sortedLabels) {
-    const oldTicker = document.getElementById('live-ticker-container');
-    if(oldTicker) oldTicker.remove();
+    function renderResultsByRound() {
+        const container = document.getElementById("results-by-round");
+        if(allMatches.length === 0) return;
+        
+        const groups = {};
+        allMatches.forEach(m => {
+            const label = `RODADA ${m.rodada} (${m.turno === 1 ? 'IDA' : 'VOLTA'})`;
+            if(!groups[label]) groups[label] = { turno: m.turno, rodada: m.rodada, games: [], hasStarted: false };
+            groups[label].games.push(m);
+            if(m.status === 'done') groups[label].hasStarted = true;
+        });
 
-    const currentLabel = sortedLabels.find(l => groups[l].games.some(g => g.status === 'open'));
-    if(!currentLabel) return;
+        const sortedLabels = Object.keys(groups).sort((a,b) => groups[a].turno - groups[b].turno || groups[a].rodada - groups[b].rodada);
+        
+        // Ativa o Ticker Profissional
+        renderLiveTicker(groups, sortedLabels);
 
-    const pendingMatches = groups[currentLabel].games.filter(g => g.status === 'open');
-    if(pendingMatches.length === 0) return;
+        const active = sortedLabels.filter(l => groups[l].hasStarted || isAdmin);
 
-    const tickerHtml = `
-        <div id="live-ticker-container" style="background: #000; border: 1px solid #222; border-radius: 8px; margin-bottom: 15px; overflow: hidden; white-space: nowrap; position: relative; padding: 10px 0;">
-            <div style="display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite;">
-                ${pendingMatches.map(m => `
-                    <span style="display: inline-block; margin-right: 50px; font-size: 11px; font-weight: bold; color: #fff;">
-                        <span style="color: var(--gold)">PRÓXIMO:</span> ${m.p1} 
-                        <span style="color: var(--primary)"> VS </span> ${m.p2}
-                    </span>
+        container.innerHTML = active.map(label => `
+            <div class="rodada-group">
+                <div class="rodada-label">${label}</div>
+                ${groups[label].games.map(m => `
+                    <div class="match-item">
+                        <span class="p-name" style="text-align:right">${m.p1}</span>
+                        <span class="p-score ${m.status !== 'done' ? 'open' : ''}" onclick="${isAdmin ? `openScoreModal('${m.id}')` : ''}">
+                            ${m.status === 'done' ? `${m.g1} - ${m.g2}` : 'VS'}
+                        </span>
+                        <span class="p-name" style="text-align:left">${m.p2}</span>
+                    </div>
                 `).join('')}
             </div>
-        </div>
-        <style>
-            @keyframes ticker-scroll {
-                0% { transform: translate3d(0, 0, 0); }
-                100% { transform: translate3d(-100%, 0, 0); }
-            }
-        </style>
-    `;
-
-    document.getElementById("results-by-round").insertAdjacentHTML('beforebegin', tickerHtml);
-}
+        `).join('');
+    }
 
     window.renderMatchesByPlayer = () => {
         const container = document.getElementById("matches-by-player");
