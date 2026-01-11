@@ -231,35 +231,77 @@
             </tr>`).join('');
     }
 
-    function renderResultsByRound() {
-        const container = document.getElementById("results-by-round");
-        if(allMatches.length === 0) return;
-        const groups = {};
-        allMatches.forEach(m => {
-            const label = `RODADA ${m.rodada} (${m.turno === 1 ? 'IDA' : 'VOLTA'})`;
-            if(!groups[label]) groups[label] = { turno: m.turno, rodada: m.rodada, games: [], hasStarted: false };
-            groups[label].games.push(m);
-            if(m.status === 'done') groups[label].hasStarted = true;
-        });
+    /* --- Substitua ou adicione estas funções no seu <script> --- */
 
-        const active = Object.keys(groups).sort((a,b) => groups[a].turno - groups[b].turno || groups[a].rodada - groups[b].rodada)
-                      .filter(l => groups[l].hasStarted || isAdmin);
+function renderResultsByRound() {
+    const container = document.getElementById("results-by-round");
+    if(allMatches.length === 0) return;
+    
+    const groups = {};
+    allMatches.forEach(m => {
+        const label = `RODADA ${m.rodada} (${m.turno === 1 ? 'IDA' : 'VOLTA'})`;
+        if(!groups[label]) groups[label] = { turno: m.turno, rodada: m.rodada, games: [], hasStarted: false };
+        groups[label].games.push(m);
+        if(m.status === 'done') groups[label].hasStarted = true;
+    });
 
-        container.innerHTML = active.map(label => `
-            <div class="rodada-group">
-                <div class="rodada-label">${label}</div>
-                ${groups[label].games.map(m => `
-                    <div class="match-item">
-                        <span class="p-name" style="text-align:right">${m.p1}</span>
-                        <span class="p-score ${m.status !== 'done' ? 'open' : ''}" onclick="${isAdmin ? `openScoreModal('${m.id}')` : ''}">
-                            ${m.status === 'done' ? `${m.g1} - ${m.g2}` : 'VS'}
-                        </span>
-                        <span class="p-name" style="text-align:left">${m.p2}</span>
-                    </div>
+    const sortedLabels = Object.keys(groups).sort((a,b) => groups[a].turno - groups[b].turno || groups[a].rodada - groups[b].rodada);
+    
+    // Filtra para mostrar o Ticker da rodada atual (a primeira que tem jogos 'open')
+    renderLiveTicker(groups, sortedLabels);
+
+    const active = sortedLabels.filter(l => groups[l].hasStarted || isAdmin);
+
+    container.innerHTML = active.map(label => `
+        <div class="rodada-group">
+            <div class="rodada-label">${label}</div>
+            ${groups[label].games.map(m => `
+                <div class="match-item">
+                    <span class="p-name" style="text-align:right">${m.p1}</span>
+                    <span class="p-score ${m.status !== 'done' ? 'open' : ''}" onclick="${isAdmin ? `openScoreModal('${m.id}')` : ''}">
+                        ${m.status === 'done' ? `${m.g1} - ${m.g2}` : 'VS'}
+                    </span>
+                    <span class="p-name" style="text-align:left">${m.p2}</span>
+                </div>
+            `).join('')}
+        </div>
+    `).join('');
+}
+
+function renderLiveTicker(groups, sortedLabels) {
+    // Remove ticker anterior se existir
+    const oldTicker = document.getElementById('live-ticker-container');
+    if(oldTicker) oldTicker.remove();
+
+    // Encontra a primeira rodada que ainda tem jogos pendentes
+    const currentLabel = sortedLabels.find(l => groups[l].games.some(g => g.status === 'open'));
+    if(!currentLabel) return;
+
+    const pendingMatches = groups[currentLabel].games.filter(g => g.status === 'open');
+    if(pendingMatches.length === 0) return;
+
+    // Cria a estrutura do Ticker
+    const tickerHtml = `
+        <div id="live-ticker-container" style="background: #000; border: 1px solid #222; border-radius: 8px; margin-bottom: 15px; overflow: hidden; white-space: nowrap; position: relative; padding: 10px 0;">
+            <div style="display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite;">
+                ${pendingMatches.map(m => `
+                    <span style="display: inline-block; margin-right: 50px; font-size: 11px; font-weight: bold;">
+                        <span style="color: var(--gold)">PROXIMO JOGO:</span> ${m.p1} <span style="color: var(--primary)">VS</span> ${m.p2}
+                    </span>
                 `).join('')}
             </div>
-        `).join('');
-    }
+        </div>
+        <style>
+            @keyframes ticker-scroll {
+                0% { transform: translate3d(0, 0, 0); }
+                100% { transform: translate3d(-100%, 0, 0); }
+            }
+        </style>
+    `;
+
+    // Insere antes das rodadas
+    document.getElementById("results-by-round").insertAdjacentHTML('beforebegin', tickerHtml);
+}
 
     window.renderMatchesByPlayer = () => {
         const container = document.getElementById("matches-by-player");
