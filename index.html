@@ -269,24 +269,22 @@ function renderResultsByRound() {
 }
 
 function renderLiveTicker(groups, sortedLabels) {
-    // Remove ticker anterior se existir
     const oldTicker = document.getElementById('live-ticker-container');
     if(oldTicker) oldTicker.remove();
 
-    // Encontra a primeira rodada que ainda tem jogos pendentes
     const currentLabel = sortedLabels.find(l => groups[l].games.some(g => g.status === 'open'));
     if(!currentLabel) return;
 
     const pendingMatches = groups[currentLabel].games.filter(g => g.status === 'open');
     if(pendingMatches.length === 0) return;
 
-    // Cria a estrutura do Ticker
     const tickerHtml = `
         <div id="live-ticker-container" style="background: #000; border: 1px solid #222; border-radius: 8px; margin-bottom: 15px; overflow: hidden; white-space: nowrap; position: relative; padding: 10px 0;">
             <div style="display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite;">
                 ${pendingMatches.map(m => `
-                    <span style="display: inline-block; margin-right: 50px; font-size: 11px; font-weight: bold;">
-                        <span style="color: var(--gold)">PROXIMO JOGO:</span> ${m.p1} <span style="color: var(--primary)">VS</span> ${m.p2}
+                    <span style="display: inline-block; margin-right: 50px; font-size: 11px; font-weight: bold; color: #fff;">
+                        <span style="color: var(--gold)">PRÓXIMO:</span> ${m.p1} 
+                        <span style="color: var(--primary)"> VS </span> ${m.p2}
                     </span>
                 `).join('')}
             </div>
@@ -299,7 +297,6 @@ function renderLiveTicker(groups, sortedLabels) {
         </style>
     `;
 
-    // Insere antes das rodadas
     document.getElementById("results-by-round").insertAdjacentHTML('beforebegin', tickerHtml);
 }
 
