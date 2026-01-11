@@ -18,14 +18,14 @@
 
         /* TABELA */
         .leaderboard-card { background: var(--card); border-radius: 12px; padding: 10px; margin-bottom: 20px; border: 1px solid var(--border); overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 340px; }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 380px; } /* Ajustado largura */
         th { color: #666; padding: 10px 5px; text-transform: uppercase; font-size: 9px; text-align: center; border-bottom: 1px solid var(--border); }
         td { padding: 12px 5px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .name-td { text-align: left; font-weight: 700; color: #fff; }
 
         .section-title { font-size: 12px; font-weight: 900; color: var(--primary); margin: 20px 0 10px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; padding: 0 5px; }
         
-        /* ESTILO PROFISSIONAL DO TICKER */
+        /* TICKER */
         .ticker-wrapper {
             background: linear-gradient(90deg, rgba(0,255,136,0.05) 0%, rgba(5,7,10,1) 50%, rgba(0,255,136,0.05) 100%);
             border-top: 1px solid rgba(0,255,136,0.2);
@@ -37,53 +37,17 @@
             display: flex;
             align-items: center;
         }
-
         .ticker-label {
-            position: absolute;
-            left: 0;
-            z-index: 10;
-            background: var(--primary);
-            color: #000;
-            font-size: 10px;
-            font-weight: 900;
-            padding: 5px 15px;
-            text-transform: uppercase;
-            clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
+            position: absolute; left: 0; z-index: 10; background: var(--primary); color: #000; font-size: 10px; font-weight: 900; padding: 5px 15px; text-transform: uppercase; clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
         }
+        .ticker-content { display: inline-block; white-space: nowrap; padding-left: 100%; animation: ticker-scroll 25s linear infinite; }
+        .ticker-match { display: inline-flex; align-items: center; gap: 15px; margin-right: 60px; font-size: 12px; font-weight: 700; color: #fff; }
+        .ticker-match .vs-badge { background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px; font-size: 9px; color: var(--primary); }
 
-        .ticker-content {
-            display: inline-block;
-            white-space: nowrap;
-            padding-left: 100%;
-            animation: ticker-scroll 25s linear infinite;
-        }
+        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        .ticker-match {
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            margin-right: 60px;
-            font-size: 12px;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .ticker-match .vs-badge {
-            background: rgba(255,255,255,0.1);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 9px;
-            color: var(--primary);
-        }
-
-        @keyframes ticker-scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
-
-        /* RODADAS (SCROLL LATERAL) */
+        /* RODADAS */
         .results-scroll-container { display: flex; overflow-x: auto; gap: 15px; padding: 5px 5px 15px; scroll-snap-type: x mandatory; scrollbar-width: none; }
-        .results-scroll-container::-webkit-scrollbar { display: none; }
         .rodada-group { min-width: 280px; background: var(--card); border-radius: 10px; padding: 12px; border: 1px solid var(--border); scroll-snap-align: start; flex-shrink: 0; }
         .rodada-label { font-size: 10px; color: var(--gold); font-weight: 900; margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 5px; text-align: center; }
         
@@ -92,21 +56,19 @@
         .match-item .p-score { background: var(--primary); color: #000; font-weight: 900; padding: 2px 8px; border-radius: 4px; min-width: 45px; text-align: center; margin: 0 8px; cursor: pointer; }
         .match-item .p-score.open { background: #333; color: #777; font-size: 9px; }
 
-        #matches-by-player .player-header { padding: 16px; font-size: 14px; letter-spacing: 1px; border-left: 4px solid var(--primary); margin-bottom: 8px; background: #1a1f26; color: #fff; width: 100%; border-top: none; border-right: none; border-bottom: none; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        #matches-by-player .match-item { padding: 15px 12px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); }
-
+        /* CONFRONTOS POR JOGADOR */
+        #matches-by-player .player-header { padding: 16px; font-size: 14px; letter-spacing: 1px; border-left: 4px solid var(--primary); margin-bottom: 8px; background: #1a1f26; color: #fff; width: 100%; border: none; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .player-content { display: none; padding: 10px; border: 1px solid #1a1f26; border-top: none; background: rgba(0,0,0,0.3); margin-bottom: 15px; border-radius: 0 0 8px 8px; }
+        .turno-header { background: #1e242d; color: var(--gold); padding: 8px 12px; font-size: 11px; font-weight: 900; margin: 15px 0 10px; border-radius: 4px; border-left: 3px solid var(--gold); }
         .mando-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin: 0 4px; text-transform: uppercase; }
         .casa { background: #333; color: var(--primary); }
         .fora { background: #222; color: #aaa; }
 
-        .player-content { display: none; padding: 10px; border: 1px solid #1a1f26; border-top: none; background: rgba(0,0,0,0.3); margin-bottom: 15px; border-radius: 0 0 8px 8px; }
-        .turno-header { background: #1e242d; color: var(--gold); padding: 8px 12px; font-size: 11px; font-weight: 900; margin: 15px 0 10px; border-radius: 4px; border-left: 3px solid var(--gold); }
-
+        /* MODAL */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }
         .modal-content { background: var(--card); border: 1px solid var(--primary); width: 100%; max-width: 350px; border-radius: 15px; padding: 25px; text-align: center; }
         .score-input-wrap { display: flex; justify-content: center; align-items: center; gap: 15px; margin: 20px 0; }
         .score-input-wrap input { width: 65px; height: 65px; background: #000; border: 2px solid #333; color: var(--primary); font-size: 30px; font-weight: 900; text-align: center; border-radius: 10px; }
-
         .btn-adm { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; font-size: 11px; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-config { position: fixed; bottom: 20px; right: 20px; background: rgba(255,255,255,0.05); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; opacity: 0.1; z-index: 999; }
 
@@ -125,7 +87,7 @@
         <table id="leaderboard">
             <thead>
                 <tr>
-                    <th>#</th><th style="text-align:left">Jogador</th><th>P</th><th>V</th><th>E</th><th>D</th><th>SG</th>
+                    <th>#</th><th style="text-align:left">Jogador</th><th>P</th><th>V</th><th>E</th><th>D</th><th>SG</th><th>GP</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -133,7 +95,6 @@
     </div>
 
     <div class="section-title"><i class="fas fa-running"></i> Rodadas em Andamento</div>
-    
     <div id="results-by-round" class="results-scroll-container"></div>
 
     <button class="btn-adm" style="background: var(--card); color: var(--primary); border: 1px solid var(--border); font-size: 13px; padding:15px;" onclick="toggleConfrontos()">
@@ -152,12 +113,10 @@
             <button onclick="addPlayer()" style="background:var(--primary); border:none; padding:0 15px; font-weight:bold; border-radius:5px;">ADD</button>
         </div>
         <div id="admin-players-list"></div>
-        
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:15px;">
             <button onclick="sortearTorneio()" style="background:var(--gold); border:none; padding:10px; font-weight:bold; border-radius:5px;">GERAR JOGOS</button>
             <button onclick="confirmReset()" style="background:#444; border:none; color:#fff; padding:10px; font-weight:bold; border-radius:5px;">LIMPAR</button>
         </div>
-
         <button class="btn-adm" style="background:#25D366; color:white;" onclick="shareResultsWhatsApp()"><i class="fab fa-whatsapp"></i> COMPARTILHAR RODADAS</button>
         <button class="btn-adm" style="background:#007bff; color:white;" onclick="shareTableWhatsApp()"><i class="fab fa-whatsapp"></i> COMPARTILHAR RANKING</button>
     </div>
@@ -217,7 +176,7 @@
             isAdmin = true;
             document.getElementById('admin-panel').style.display = 'block';
             document.getElementById('admin-auth').style.display = 'none';
-            renderResultsByRound(); // Atualiza para liberar cliques admin
+            renderResultsByRound();
         } else alert("PIN Incorreto");
     };
 
@@ -229,7 +188,8 @@
 
     onSnapshot(collection(db, "jogadores"), (snap) => {
         globalPlayers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        globalPlayers.sort((a,b) => b.pts - a.pts || b.sg - a.sg);
+        // Ordenação: Pontos -> SG -> GP (Gols Pró)
+        globalPlayers.sort((a,b) => b.pts - a.pts || b.sg - a.sg || (b.gp || 0) - (a.gp || 0));
         renderLeaderboard();
         updateAdminList();
     });
@@ -246,18 +206,15 @@
                 <td class="name-td">${p.nome}</td>
                 <td style="color:var(--primary); font-weight:900;">${p.pts}</td>
                 <td>${p.v}</td><td>${p.e}</td><td>${p.d}</td><td>${p.sg}</td>
+                <td style="font-weight:bold;">${p.gp || 0}</td>
             </tr>`).join('');
     }
 
-    // --- NOVA LOGICA DO TICKER E RODADAS ---
     function renderLiveTicker(groups, sortedLabels) {
         const oldTicker = document.getElementById('live-ticker-container');
         if(oldTicker) oldTicker.remove();
-
-        // Encontra a primeira rodada que ainda tem jogos pendentes ('open')
         const currentLabel = sortedLabels.find(l => groups[l].games.some(g => g.status === 'open'));
         if(!currentLabel) return;
-
         const pendingMatches = groups[currentLabel].games.filter(g => g.status === 'open');
         if(pendingMatches.length === 0) return;
 
@@ -265,16 +222,7 @@
             <div id="live-ticker-container" class="ticker-wrapper">
                 <div class="ticker-label">Próximos</div>
                 <div class="ticker-content">
-                    ${pendingMatches.map(m => `
-                        <div class="ticker-match">
-                            <span style="opacity: 0.5; font-size: 9px;">${currentLabel}</span>
-                            <span>${m.p1.toUpperCase()}</span>
-                            <span class="vs-badge">VS</span>
-                            <span>${m.p2.toUpperCase()}</span>
-                            <span style="color:var(--primary); margin: 0 20px;">•</span>
-                        </div>
-                    `).join('')}
-                    ${pendingMatches.map(m => `
+                    ${pendingMatches.concat(pendingMatches).map(m => `
                         <div class="ticker-match">
                             <span style="opacity: 0.5; font-size: 9px;">${currentLabel}</span>
                             <span>${m.p1.toUpperCase()}</span>
@@ -284,15 +232,13 @@
                         </div>
                     `).join('')}
                 </div>
-            </div>
-        `;
+            </div>`;
         document.getElementById("results-by-round").insertAdjacentHTML('beforebegin', tickerHtml);
     }
 
     function renderResultsByRound() {
         const container = document.getElementById("results-by-round");
         if(allMatches.length === 0) return;
-        
         const groups = {};
         allMatches.forEach(m => {
             const label = `RODADA ${m.rodada} (${m.turno === 1 ? 'IDA' : 'VOLTA'})`;
@@ -300,14 +246,9 @@
             groups[label].games.push(m);
             if(m.status === 'done') groups[label].hasStarted = true;
         });
-
         const sortedLabels = Object.keys(groups).sort((a,b) => groups[a].turno - groups[b].turno || groups[a].rodada - groups[b].rodada);
-        
-        // Ativa o Ticker Profissional
         renderLiveTicker(groups, sortedLabels);
-
         const active = sortedLabels.filter(l => groups[l].hasStarted || isAdmin);
-
         container.innerHTML = active.map(label => `
             <div class="rodada-group">
                 <div class="rodada-label">${label}</div>
@@ -318,10 +259,8 @@
                             ${m.status === 'done' ? `${m.g1} - ${m.g2}` : 'VS'}
                         </span>
                         <span class="p-name" style="text-align:left">${m.p2}</span>
-                    </div>
-                `).join('')}
-            </div>
-        `).join('');
+                    </div>`).join('')}
+            </div>`).join('');
     }
 
     window.renderMatchesByPlayer = () => {
@@ -382,6 +321,39 @@
         recalculateTable();
     };
 
+    window.addPlayer = async () => {
+        const n = document.getElementById("new-player-name").value;
+        if(n) await addDoc(collection(db, "jogadores"), { nome: n, pts:0, v:0, e:0, d:0, sg:0, gp:0 });
+        document.getElementById("new-player-name").value = "";
+    };
+
+    async function recalculateTable() {
+        const pSnap = await getDocs(collection(db, "jogadores"));
+        const mSnap = await getDocs(collection(db, "partidas"));
+        const batch = writeBatch(db);
+        pSnap.forEach(pDoc => {
+            const n = pDoc.data().nome;
+            let st = { pts:0, v:0, e:0, d:0, sg:0, gp:0 };
+            mSnap.forEach(mDoc => {
+                const m = mDoc.data(); if(m.status !== 'done') return;
+                if(m.p1 === n) { 
+                    st.gp += m.g1; // Adicionado GP
+                    st.sg += (m.g1 - m.g2); 
+                    if(m.g1 > m.g2) { st.pts += 3; st.v++; } 
+                    else if(m.g1 === m.g2) { st.pts += 1; st.e++; } else st.d++; 
+                }
+                else if(m.p2 === n) { 
+                    st.gp += m.g2; // Adicionado GP
+                    st.sg += (m.g2 - m.g1); 
+                    if(m.g2 > m.g1) { st.pts += 3; st.v++; } 
+                    else if(m.g1 === m.g2) { st.pts += 1; st.e++; } else st.d++; 
+                }
+            });
+            batch.update(pDoc.ref, st);
+        });
+        await batch.commit();
+    }
+
     window.updateAdminList = () => {
         document.getElementById("admin-players-list").innerHTML = globalPlayers.map(p => `
             <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #222; font-size:11px; align-items:center;">
@@ -390,8 +362,7 @@
                     <i class="fas fa-edit" style="color:var(--gold); margin-right:20px;" onclick="editPlayerName('${p.id}', '${p.nome}')"></i>
                     <i class="fas fa-trash" style="color:red;" onclick="deletePlayer('${p.id}')"></i>
                 </div>
-            </div>
-        `).join('');
+            </div>`).join('');
     };
 
     window.editPlayerName = async (id, old) => {
@@ -403,19 +374,13 @@
         if(confirm("Excluir jogador?")) await deleteDoc(doc(db, "jogadores", id));
     };
 
-    window.addPlayer = async () => {
-        const n = document.getElementById("new-player-name").value;
-        if(n) await addDoc(collection(db, "jogadores"), { nome: n, pts:0, v:0, e:0, d:0, sg:0 });
-        document.getElementById("new-player-name").value = "";
-    };
-
     window.confirmReset = async () => {
         if(confirm("ZERAR TORNEIO?")) {
             const m = await getDocs(collection(db, "partidas"));
             const p = await getDocs(collection(db, "jogadores"));
             const batch = writeBatch(db);
             m.forEach(d => batch.delete(d.ref));
-            p.forEach(d => batch.update(d.ref, { pts:0, v:0, e:0, d:0, sg:0 }));
+            p.forEach(d => batch.update(d.ref, { pts:0, v:0, e:0, d:0, sg:0, gp:0 }));
             await batch.commit();
         }
     };
@@ -441,39 +406,14 @@
         await batch.commit();
     };
 
-    async function recalculateTable() {
-        const pSnap = await getDocs(collection(db, "jogadores"));
-        const mSnap = await getDocs(collection(db, "partidas"));
-        const batch = writeBatch(db);
-        pSnap.forEach(pDoc => {
-            const n = pDoc.data().nome;
-            let st = { pts:0, v:0, e:0, d:0, sg:0 };
-            mSnap.forEach(mDoc => {
-                const m = mDoc.data(); if(m.status !== 'done') return;
-                if(m.p1 === n) { st.sg += (m.g1 - m.g2); if(m.g1 > m.g2) { st.pts += 3; st.v++; } else if(m.g1 === m.g2) { st.pts += 1; st.e++; } else st.d++; }
-                else if(m.p2 === n) { st.sg += (m.g2 - m.g1); if(m.g2 > m.g1) { st.pts += 3; st.v++; } else if(m.g1 === m.g2) { st.pts += 1; st.e++; } else st.d++; }
-            });
-            batch.update(pDoc.ref, st);
-        });
-        await batch.commit();
-    }
-
     window.shareResultsWhatsApp = () => {
         const rodadasExistentes = [...new Set(allMatches.map(m => m.rodada))].sort((a, b) => a - b);
-        if (rodadasExistentes.length === 0) {
-            alert("Nenhuma rodada encontrada.");
-            return;
-        }
-        const escolha = prompt(`Digite o número da rodada que deseja compartilhar:\n(Opções: ${rodadasExistentes.join(", ")})`, rodadasExistentes[0]);
-        if (escolha === null || escolha === "") return;
+        if (rodadasExistentes.length === 0) return alert("Nenhuma rodada.");
+        const escolha = prompt(`Rodada:\n(${rodadasExistentes.join(", ")})`, rodadasExistentes[0]);
+        if (!escolha) return;
         const numRodada = parseInt(escolha);
         const partidasDaRodada = allMatches.filter(m => m.rodada === numRodada);
-        if (partidasDaRodada.length === 0) {
-            alert("Rodada inválida.");
-            return;
-        }
-        let t = `*🏆 EFOOTBALL - RODADA ${numRodada}*\n`;
-        t += "━━━━━━━━━━━━━━━━━━━━\n\n";
+        let t = `*🏆 EFOOTBALL - RODADA ${numRodada}*\n━━━━━━━━━━━━━━━━━━━━\n\n`;
         [1, 2].forEach(turno => {
             const jogos = partidasDaRodada.filter(m => m.turno === turno);
             if (jogos.length > 0) {
@@ -486,13 +426,14 @@
                 t += "\n";
             }
         });
-        t += "━━━━━━━━━━━━━━━━━━━━";
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`);
     };
 
     window.shareTableWhatsApp = () => {
         let t = "*📊 CLASSIFICAÇÃO ATUAL*\n\n";
-        globalPlayers.forEach((p, i) => { t += `${i+1}º ${p.nome.toUpperCase()}: ${p.pts}pts (${p.v}V | SG:${p.sg})\n`; });
+        globalPlayers.forEach((p, i) => { 
+            t += `${i+1}º ${p.nome.toUpperCase()}: ${p.pts}pts (${p.v}V | SG:${p.sg} | GP:${p.gp || 0})\n`; 
+        });
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`);
     };
 </script>
