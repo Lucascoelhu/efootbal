@@ -430,12 +430,27 @@
     };
 
     window.shareTableWhatsApp = () => {
-        let t = "*📊 CLASSIFICAÇÃO ATUAL*\n\n";
-        globalPlayers.forEach((p, i) => { 
-            t += `${i+1}º ${p.nome.toUpperCase()}: ${p.pts}pts (${p.v}V | SG:${p.sg} | GP:${p.gp || 0})\n`; 
-        });
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`);
-    };
+    let t = "*📊 CLASSIFICAÇÃO ATUAL*\n";
+    t += "```#  JOGADOR      P  V  SG GP```\n"; // Cabeçalho com fonte monoespaçada
+    t += "```━━━━━━━━━━━━━━━━━━━━━━━━━━```\n";
+
+    globalPlayers.forEach((p, i) => {
+        const pos = (i + 1).toString().padEnd(3, ' ');
+        // Corta o nome se for muito grande para não quebrar a tabela no celular
+        const nome = p.nome.toUpperCase().substring(0, 10).padEnd(11, ' ');
+        const pts = p.pts.toString().padEnd(3, ' ');
+        const v = p.v.toString().padEnd(3, ' ');
+        const sg = p.sg.toString().padEnd(3, ' ');
+        const gp = (p.gp || 0).toString();
+
+        t += "```" + pos + nome + pts + v + sg + gp + "```\n";
+    });
+
+    t += "```━━━━━━━━━━━━━━━━━━━━━━━━━━```\n";
+    t += "_Atualizado em: " + new Date().toLocaleDateString() + "_";
+
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`);
+};
 </script>
 </body>
 </html>
